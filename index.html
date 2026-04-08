@@ -51,6 +51,7 @@ select option{background:var(--s2)}
 table{width:100%;border-collapse:collapse;font-size:12px}
 thead tr{background:var(--s2);border-radius:6px}
 th{font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:8px 10px;text-align:left;white-space:nowrap;border-bottom:1px solid var(--b2)}
+th:hover{color:var(--text);background:var(--s3)}
 td{padding:8px 10px;border-bottom:1px solid var(--b);white-space:nowrap;vertical-align:middle}
 tr:hover td{background:var(--s2);cursor:pointer}
 tr:last-child td{border-bottom:none}
@@ -138,21 +139,11 @@ tr:last-child td{border-bottom:none}
       </select>
     </div>
     <div class="filter-group">
-      <div class="filter-lbl">Sort by</div>
-      <select id="f-sort" onchange="reSort()">
-        <option value="composite">Bounce score</option>
-        <option value="ath">ATH drop %</option>
-        <option value="vol">Volume</option>
-        <option value="change7d">7d decline</option>
-        <option value="liveness">Liveness</option>
-      </select>
-    </div>
-    <div class="filter-group">
       <div class="filter-lbl">Show only</div>
       <select id="f-verdict" onchange="reSort()">
         <option value="">All results</option>
-        <option value="WATCH NOW">Watch Now only</option>
-        <option value="WATCH">Watch + above</option>
+        <option value="BUY">Buy only</option>
+        <option value="ACCUMULATE">Accumulate + above</option>
         <option value="wb">Webull tradable</option>
         <option value="cb">Coinbase listed</option>
         <option value="bn">Binance listed</option>
@@ -203,6 +194,8 @@ function isStable(coin) {
 let results = [];
 let aborted = false;
 let scanning = false;
+let sortCol = 'composite';
+let sortDir = -1; // -1 = desc, 1 = asc
 
 // ── SCAN ──
 async function startScan() {
@@ -353,10 +346,10 @@ function scoreToken(coin, wb) {
 
   // VERDICT
   let verdict, vcls;
-  if (composite >= 7) { verdict = 'WATCH NOW'; vcls = 'tg'; }
-  else if (composite >= 5) { verdict = 'WATCH'; vcls = 'tb'; }
-  else if (composite >= 3) { verdict = 'WAIT'; vcls = 'ta'; }
-  else { verdict = 'WEAK'; vcls = 'tm'; }
+  if (composite >= 7) { verdict = 'BUY'; vcls = 'tg'; }
+  else if (composite >= 5) { verdict = 'ACCUMULATE'; vcls = 'tb'; }
+  else if (composite >= 3) { verdict = 'WAIT FOR DIP'; vcls = 'ta'; }
+  else { verdict = 'AVOID'; vcls = 'tm'; }
 
   return { os, lv, br, composite, verdict, vcls,
     athDrop, vol, mcap, liq, c24, c7, c14, c30 };
@@ -364,26 +357,46 @@ function scoreToken(coin, wb) {
 
 // ── RENDER TABLE ──
 function renderTable() {
-  const sortBy = document.getElementById('f-sort').value;
+  // Column definitions: [label, sortKey]
+  const cols = [
+    ['Ticker','sym'],['Name','name'],['Price','price'],
+    ['24h','c24'],['7d','c7'],['ATH drop','ath'],
+    ['Volume','vol'],['Mcap','mcap'],
+    ['Oversold','os'],['Liveness','lv'],['Bounce','br'],['Score','composite'],
+    ['Best venue','exch'],['Action','verdict']
+  ];
+
+  const sortBy = sortCol;
   const filterV = document.getElementById('f-verdict').value;
 
   let rows = [...results];
 
   // Filter
-  if (filterV === 'WATCH NOW') rows = rows.filter(r => r.verdict === 'WATCH NOW');
-  else if (filterV === 'WATCH') rows = rows.filter(r => r.composite >= 5);
+  if (filterV === 'BUY') rows = rows.filter(r => r.verdict === 'BUY');
+  else if (filterV === 'ACCUMULATE') rows = rows.filter(r => r.composite >= 5);
   else if (filterV === 'wb') rows = rows.filter(r => r.wb?.wb_tradable);
   else if (filterV === 'cb') rows = rows.filter(r => r.wb?.on_coinbase);
   else if (filterV === 'bn') rows = rows.filter(r => r.wb?.on_bn_global);
 
-  // Sort
+  // Sort using sortCol and sortDir
   rows.sort((a,b) => {
-    if (sortBy === 'composite') return b.composite - a.composite;
-    if (sortBy === 'ath') return b.athDrop - a.athDrop;
-    if (sortBy === 'vol') return b.vol - a.vol;
-    if (sortBy === 'change7d') return a.c7 - b.c7;
-    if (sortBy === 'liveness') return b.lv - a.lv;
-    return b.composite - a.composite;
+    let av, bv;
+    if (sortBy==='sym') { av=a.coin.symbol||''; bv=b.coin.symbol||''; return sortDir*av.localeCompare(bv); }
+    if (sortBy==='name') { av=a.coin.name||''; bv=b.coin.name||''; return sortDir*av.localeCompare(bv); }
+    if (sortBy==='price') { av=a.coin.current_price||0; bv=b.coin.current_price||0; }
+    else if (sortBy==='c24') { av=a.c24; bv=b.c24; }
+    else if (sortBy==='c7') { av=a.c7; bv=b.c7; }
+    else if (sortBy==='ath') { av=a.athDrop; bv=b.athDrop; }
+    else if (sortBy==='vol') { av=a.vol; bv=b.vol; }
+    else if (sortBy==='mcap') { av=a.mcap; bv=b.mcap; }
+    else if (sortBy==='os') { av=a.os; bv=b.os; }
+    else if (sortBy==='lv') { av=a.lv; bv=b.lv; }
+    else if (sortBy==='br') { av=a.br; bv=b.br; }
+    else if (sortBy==='composite') { av=a.composite; bv=b.composite; }
+    else if (sortBy==='exch') { av=bestExch(a).name; bv=bestExch(b).name; return sortDir*av.localeCompare(bv); }
+    else if (sortBy==='verdict') { av=a.composite; bv=b.composite; }
+    else { av=a.composite; bv=b.composite; }
+    return sortDir*(bv-av);
   });
 
   if (!rows.length) {
@@ -391,14 +404,12 @@ function renderTable() {
     return;
   }
 
-  let html = `<div style="font-size:11px;color:var(--muted);margin-bottom:6px">${rows.length} tokens displayed · Click any row for detailed analysis</div>
+  let html = `<div style="font-size:11px;color:var(--muted);margin-bottom:6px">${rows.length} tokens displayed · Click column headers to sort · Click any row for analysis</div>
   <div class="results-card"><div class="tbl-wrap"><table>
   <thead><tr>
-    <th>Ticker</th><th>Name</th><th>Price</th>
-    <th>24h</th><th>7d</th><th>ATH drop</th>
-    <th>Volume</th><th>Mcap</th>
-    <th>Oversold</th><th>Liveness</th><th>Bounce</th><th>Score</th>
-    <th>Best venue</th><th>Verdict</th>
+    ${cols.map(([lbl,key])=>`<th onclick="colSort('${key}')" style="cursor:pointer;user-select:none;white-space:nowrap">
+      ${lbl} <span style="color:${sortCol===key?'var(--green)':'var(--mu2)'};font-size:10px">${sortCol===key?(sortDir===-1?'↓':'↑'):'↕'}</span>
+    </th>`).join('')}
   </tr></thead><tbody>`;
 
   for (const r of rows) {
@@ -425,16 +436,22 @@ function renderTable() {
   document.getElementById('results-wrap').innerHTML = html;
 }
 
+function colSort(key) {
+  if (sortCol === key) { sortDir *= -1; } // flip direction
+  else { sortCol = key; sortDir = -1; } // new col defaults to desc
+  renderTable();
+}
+
 function reSort() { if (results.length) renderTable(); }
 
 function renderMetrics(passed, fetched) {
-  const wn = results.filter(r=>r.verdict==='WATCH NOW').length;
+  const wn = results.filter(r=>r.verdict==='BUY').length;
   const w  = results.filter(r=>r.composite>=5&&r.composite<7).length;
   const wb = results.filter(r=>r.wb?.wb_tradable).length;
   document.getElementById('metrics').style.display = 'grid';
   document.getElementById('metrics').innerHTML = `
-    <div class="metric"><div class="metric-val" style="color:var(--green)">${wn}</div><div class="metric-lbl">Watch Now</div></div>
-    <div class="metric"><div class="metric-val" style="color:var(--blue)">${w}</div><div class="metric-lbl">Watch</div></div>
+    <div class="metric"><div class="metric-val" style="color:var(--green)">${wn}</div><div class="metric-lbl">Buy signals</div></div>
+    <div class="metric"><div class="metric-val" style="color:var(--blue)">${w}</div><div class="metric-lbl">Accumulate</div></div>
     <div class="metric"><div class="metric-val">${passed}</div><div class="metric-lbl">Passed filters</div></div>
     <div class="metric"><div class="metric-val class="mu"">${fetched}</div><div class="metric-lbl">Scanned</div></div>
     <div class="metric"><div class="metric-val" style="color:var(--amber)">${wb}</div><div class="metric-lbl">Webull tradable</div></div>
@@ -556,11 +573,11 @@ function generateAnalysis(r) {
   const exch = bestExch(r);
 
   if (r.composite >= 7) {
-    trade = `<strong>Spot buy</strong> at current levels ($${fmtP(entryZone)}) with a target of $${fmtP(target)} (+${athDrop>80?40:25}% from entry). Hard stop at $${fmtP(stop)} (-12%). If available on ${exch.name} perp, a small leveraged long (3-5x max) with the same stop adds upside. Do not chase — if price moves more than 8% above current before you enter, wait for a pullback.`;
+    trade = `<strong>Buy now (spot)</strong> at current levels ($${fmtP(entryZone)}) with a target of $${fmtP(target)} (+${athDrop>80?40:25}% from entry). Hard stop at $${fmtP(stop)} (-12%). If available on ${exch.name} perp, a small leveraged long (3-5x max) with the same stop adds upside. Do not chase — if price moves more than 8% above current before you enter, wait for a pullback.`;
   } else if (r.composite >= 5) {
-    trade = `<strong>Watch list only</strong> — not yet ready for entry. Set a price alert at $${fmtP(entryZone*0.95)} (5% below current) as a potential better entry if the decline continues. Target $${fmtP(target)} if the bounce comes. Only enter on spot — no leverage until bounce is confirmed.`;
+    trade = `<strong>Accumulate in small tranches</strong> — not fully ready but conditions are improving. Start with 25-30% of intended position at current price ($${fmtP(entryZone)}). Set a price alert at $${fmtP(entryZone*0.95)} (5% lower) to add more if it dips. Target $${fmtP(target)}. Spot only — no leverage until bounce is confirmed.`;
   } else {
-    trade = `<strong>Avoid for now.</strong> Risk/reward does not support entry yet. This may find a lower base. If forced to hold a position, keep size minimal and set a hard stop at $${fmtP(stop)}. Revisit when weekly decline decelerates.`;
+    trade = `<strong>Do not buy yet — stand aside.</strong> Risk/reward does not support entry. This may find a lower base before recovering. If already holding, set a hard stop at $${fmtP(stop)}. Revisit when weekly decline decelerates and volume starts expanding.`;
   }
 
   return `<h4>1. Is it alive?</h4><p>${alive}</p>
