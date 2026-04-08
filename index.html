@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Oversold Scanner</title>
+<title>Oversold Scanner v3</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -26,36 +26,46 @@ header{display:flex;align-items:center;justify-content:space-between;padding:14p
 .logo em{color:var(--green);font-style:normal}
 .logo-sub{font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-top:1px}
 .live-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 2s infinite;display:inline-block}
-.container{max-width:1300px;margin:0 auto;padding:18px 20px}
-.top-bar{display:flex;align-items:flex-end;gap:12px;margin-bottom:14px;flex-wrap:wrap}
-.scan-btn{font-family:var(--disp);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:var(--green);color:#000;border:none;border-radius:6px;padding:10px 24px;cursor:pointer;transition:all .13s;white-space:nowrap}
+/* REGIME BANNER */
+.regime-banner{display:none;align-items:center;justify-content:space-between;padding:10px 24px;font-size:12px;border-bottom:1px solid var(--b)}
+.regime-banner.show{display:flex}
+.regime-label{font-family:var(--disp);font-size:13px;font-weight:600}
+.regime-detail{color:var(--muted);font-size:11px}
+.regime-btc{font-family:var(--mono);font-size:11px}
+/* LAYOUT */
+.container{max-width:1400px;margin:0 auto;padding:16px 20px}
+.top-bar{display:flex;align-items:flex-end;gap:10px;margin-bottom:12px;flex-wrap:wrap;flex-direction:row}
+.scan-btn{font-family:var(--disp);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:var(--green);color:#000;border:none;border-radius:6px;padding:10px 22px;cursor:pointer;transition:all .13s;white-space:nowrap}
 .scan-btn:hover{background:#00f0a0}
 .scan-btn:disabled{background:var(--s3);color:var(--muted);cursor:not-allowed}
-.stop-btn{font-family:var(--disp);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:var(--red);color:#fff;border:none;border-radius:6px;padding:10px 20px;cursor:pointer;display:none}
-.filter-group{display:flex;flex-direction:column;gap:4px}
-.filter-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
-select,input[type=number]{background:var(--s2);border:1px solid var(--b2);border-radius:5px;color:var(--text);font-family:var(--mono);font-size:12px;padding:7px 10px;outline:none;transition:border-color .14s}
+.stop-btn{font-family:var(--disp);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:var(--red);color:#fff;border:none;border-radius:6px;padding:10px 18px;cursor:pointer;display:none}
+.fg{display:flex;flex-direction:column;gap:4px;min-width:120px;flex:0 0 auto}
+.fl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;white-space:nowrap}
+select{background:var(--s2);border:1px solid var(--b2);border-radius:5px;color:var(--text);font-family:var(--mono);font-size:12px;padding:7px 10px;outline:none;transition:border-color .14s;width:100%}
 select:focus{border-color:var(--green)}
 select option{background:var(--s2)}
-.progress-wrap{margin-bottom:10px;display:none}
-.progress-wrap.show{display:block}
-.progress-bar{width:100%;height:4px;background:var(--s3);border-radius:2px;overflow:hidden;margin-bottom:6px}
-.progress-fill{height:100%;background:var(--green);border-radius:2px;transition:width .4s ease;width:0%}
-.status-line{font-size:11px;color:var(--muted);min-height:16px}
-.metrics{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;margin-bottom:14px;display:none}
-.metric{background:var(--s2);border:1px solid var(--b);border-radius:6px;padding:10px 12px}
-.metric-val{font-family:var(--disp);font-size:17px;font-weight:600;line-height:1.2;margin-bottom:2px}
+/* PROGRESS */
+.prog-wrap{margin-bottom:10px;display:none}
+.prog-wrap.show{display:block}
+.prog-bar{width:100%;height:4px;background:var(--s3);border-radius:2px;overflow:hidden;margin-bottom:6px}
+.prog-fill{height:100%;background:var(--green);border-radius:2px;transition:width .4s ease;width:0%}
+.status{font-size:11px;color:var(--muted);min-height:16px}
+/* METRICS */
+.metrics{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;margin-bottom:12px;display:none}
+.metric{background:var(--s2);border:1px solid var(--b);border-radius:6px;padding:9px 12px}
+.metric-val{font-family:var(--disp);font-size:16px;font-weight:600;line-height:1.2;margin-bottom:2px}
 .metric-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
 /* TABLE */
 .tbl-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:12px}
-thead tr{background:var(--s2);border-radius:6px}
-th{font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:8px 10px;text-align:left;white-space:nowrap;border-bottom:1px solid var(--b2)}
+table{width:100%;border-collapse:collapse;font-size:11px}
+thead tr{background:var(--s2)}
+th{font-size:9px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:8px 8px;text-align:left;white-space:nowrap;border-bottom:1px solid var(--b2);cursor:pointer;user-select:none}
 th:hover{color:var(--text);background:var(--s3)}
-td{padding:8px 10px;border-bottom:1px solid var(--b);white-space:nowrap;vertical-align:middle}
+td{padding:7px 8px;border-bottom:1px solid var(--b);white-space:nowrap;vertical-align:middle}
 tr:hover td{background:var(--s2);cursor:pointer}
 tr:last-child td{border-bottom:none}
 .results-card{background:var(--s1);border:1px solid var(--b2);border-radius:8px;overflow:hidden;margin-bottom:16px}
+/* TAGS */
 .tag{display:inline-block;font-size:10px;font-weight:500;padding:2px 6px;border-radius:3px}
 .tg{background:var(--gdim);color:var(--green)}
 .tr2{background:var(--rdim);color:var(--red)}
@@ -64,55 +74,99 @@ tr:last-child td{border-bottom:none}
 .tm{background:var(--s3);color:var(--muted)}
 .tp{background:var(--pdim);color:var(--purple)}
 .pos{color:var(--green)} .neg{color:var(--red)} .mu{color:var(--muted)}
-.sbar{width:50px;height:5px;background:var(--s3);border-radius:2px;overflow:hidden;display:inline-block;vertical-align:middle;margin-left:4px}
+/* SCORE BAR */
+.sbar{width:36px;height:4px;background:var(--s3);border-radius:2px;overflow:hidden;display:inline-block;vertical-align:middle;margin-left:3px}
 .sbar-fill{height:100%;border-radius:2px}
-.empty-state{text-align:center;padding:48px;color:var(--muted)}
+/* COPY BTN */
+.copy-btn{background:none;border:none;color:var(--mu2);cursor:pointer;font-size:10px;padding:1px 4px;border-radius:2px;transition:color .12s;font-family:var(--mono)}
+.copy-btn:hover{color:var(--green)}
+.copy-btn.copied{color:var(--green)}
+/* PROB DISPLAY */
+.prob-big{font-family:var(--disp);font-size:14px;font-weight:700}
+/* EMPTY */
+.empty-state{text-align:center;padding:40px;color:var(--muted)}
 /* MODAL */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:100;display:none;align-items:flex-start;justify-content:center;padding:24px;overflow-y:auto}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:100;display:none;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto}
 .modal-overlay.show{display:flex}
-.modal{background:var(--s1);border:1px solid var(--b2);border-radius:10px;padding:24px 28px;max-width:760px;width:100%;position:relative;margin:auto}
+.modal{background:var(--s1);border:1px solid var(--b2);border-radius:10px;padding:22px 26px;max-width:820px;width:100%;position:relative;margin:auto}
 .modal-x{position:absolute;top:14px;right:18px;background:none;border:none;color:var(--muted);cursor:pointer;font-size:22px;line-height:1}
 .modal-x:hover{color:var(--text)}
-.modal-h{font-family:var(--disp);font-size:22px;font-weight:700;margin-bottom:3px}
-.modal-sub{font-size:11px;color:var(--muted);margin-bottom:18px}
-.mgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
-.mstat{background:var(--s3);border-radius:5px;padding:10px 12px}
-.mstat-v{font-size:15px;font-weight:500;margin-bottom:2px}
+.modal-h{font-family:var(--disp);font-size:20px;font-weight:700;margin-bottom:3px}
+.modal-sub{font-size:11px;color:var(--muted);margin-bottom:16px}
+.mgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.mgrid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.mstat{background:var(--s3);border-radius:5px;padding:9px 11px}
+.mstat-v{font-size:14px;font-weight:500;margin-bottom:2px}
 .mstat-l{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
-.sec-title{font-family:var(--disp);font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:8px;margin:14px 0 10px}
-.sec-title::after{content:'';flex:1;height:1px;background:var(--b2)}
-.analysis-box{background:var(--s2);border:1px solid var(--b2);border-radius:6px;padding:14px 16px;font-size:12px;line-height:1.8}
-.analysis-box h4{font-size:11px;font-weight:500;color:var(--green);margin-bottom:4px;margin-top:10px}
-.analysis-box h4:first-child{margin-top:0}
+.sec{font-family:var(--disp);font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:8px;margin:14px 0 10px}
+.sec::after{content:'';flex:1;height:1px;background:var(--b2)}
+.abox{background:var(--s2);border:1px solid var(--b2);border-radius:6px;padding:13px 15px;font-size:12px;line-height:1.8}
+.abox h4{font-size:11px;font-weight:500;color:var(--green);margin-bottom:3px;margin-top:10px}
+.abox h4:first-child{margin-top:0}
+.abox h4.fail{color:var(--red)}
+.abox h4.exec{color:var(--blue)}
 .epill{display:inline-block;font-size:10px;padding:3px 8px;border-radius:3px;border:1px solid var(--b2);color:var(--muted);margin:2px}
 .epill.best{border-color:var(--green);color:var(--green);background:var(--gdim)}
 .epill.ok{border-color:var(--blue);color:var(--blue);background:var(--bdim)}
-.news-item{padding:7px 0;border-bottom:1px solid var(--b);font-size:11px;line-height:1.5}
+.news-item{padding:6px 0;border-bottom:1px solid var(--b);font-size:11px;line-height:1.5}
 .news-item:last-child{border-bottom:none}
 .news-item a{color:var(--blue);text-decoration:none}
 .news-item a:hover{text-decoration:underline}
 .spinner-sm{width:12px;height:12px;border:2px solid var(--b3);border-top-color:var(--green);border-radius:50%;animation:spin .7s linear infinite;display:inline-block;vertical-align:middle;margin-right:6px}
+/* PROB RING */
+.prob-ring{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;width:72px;height:72px;border-radius:50%;border:2px solid}
+.prob-pct{font-family:var(--disp);font-size:20px;font-weight:700;line-height:1}
+.prob-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+/* WARNING BOX */
+.warn-box{background:rgba(255,184,48,0.08);border:1px solid rgba(255,184,48,0.3);border-radius:5px;padding:8px 12px;font-size:11px;color:var(--amber);margin-bottom:10px;display:flex;align-items:flex-start;gap:8px}
+.warn-icon{flex-shrink:0;margin-top:1px}
+.data-gap-box{background:rgba(91,107,126,0.1);border:1px solid var(--b2);border-radius:5px;padding:8px 12px;font-size:11px;color:var(--muted);margin-top:10px}
 </style>
 </head>
 <body>
+
 <header>
   <div>
-    <div class="logo">OVER<em>SOLD</em></div>
-    <div class="logo-sub">4000+ token scanner · Free · No API cost</div>
+    <div class="logo">OVER<em>SOLD</em> <span style="font-size:10px;color:var(--muted);font-family:var(--mono);font-weight:400">v3</span></div>
+    <div class="logo-sub">4000+ token scanner · Probability engine · Free</div>
   </div>
   <div style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--muted)">
     <span class="live-dot"></span>
-    CoinGecko live · Rule-based analysis · Free news
+    CoinGecko live · Rule-based · No API cost
   </div>
 </header>
 
+<div class="regime-banner" id="regime-banner">
+  <div>
+    <div class="regime-label" id="regime-label">—</div>
+    <div class="regime-detail" id="regime-detail">—</div>
+  </div>
+  <div style="text-align:right">
+    <div class="regime-btc" id="regime-btc">—</div>
+    <div style="font-size:10px;color:var(--muted)">BTC 7d / 30d</div>
+  </div>
+</div>
+
 <div class="container">
-  <div class="top-bar">
+  <!-- QUICK SEARCH -->
+  <div style="display:flex;flex-direction:row;gap:8px;align-items:flex-end;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--b);flex-wrap:wrap">
+    <div class="fg" style="flex:1;max-width:280px">
+      <div class="fl">⚡ Quick coin lookup — no scan needed</div>
+      <input type="text" id="search-input" placeholder="Type ticker e.g. NKN, SOL, PEPE…"
+        style="background:var(--s2);border:1px solid var(--green);border-radius:5px;color:var(--text);font-family:var(--mono);font-size:13px;padding:8px 12px;outline:none;width:100%;transition:box-shadow .15s"
+        onkeydown="if(event.key==='Enter')quickSearch()"
+        onfocus="this.style.boxShadow='0 0 0 2px rgba(0,214,143,0.2)'"
+        onblur="this.style.boxShadow='none'">
+    </div>
+    <button class="scan-btn" style="background:var(--s3);color:var(--text);border:1px solid var(--b2)" onclick="quickSearch()" id="search-btn">Search</button>
+    <div id="search-status" style="font-size:11px;color:var(--muted);align-self:center"></div>
+  </div>
+
+
     <button class="scan-btn" id="scan-btn" onclick="startScan()">▶ Run Scan</button>
     <button class="stop-btn" id="stop-btn" onclick="stopScan()">■ Stop</button>
 
-    <div class="filter-group">
-      <div class="filter-lbl">ATH drop (min %)</div>
+    <div class="fg"><div class="fl">ATH drop min</div>
       <select id="f-ath">
         <option value="50">50%+</option>
         <option value="60" selected>60%+</option>
@@ -120,8 +174,7 @@ tr:last-child td{border-bottom:none}
         <option value="80">80%+</option>
       </select>
     </div>
-    <div class="filter-group">
-      <div class="filter-lbl">Min 24h volume</div>
+    <div class="fg"><div class="fl">Min 24h volume</div>
       <select id="f-vol">
         <option value="50000">$50K+</option>
         <option value="100000" selected>$100K+</option>
@@ -129,21 +182,28 @@ tr:last-child td{border-bottom:none}
         <option value="1000000">$1M+</option>
       </select>
     </div>
-    <div class="filter-group">
-      <div class="filter-lbl">Max pages (250/page)</div>
-      <select id="f-pages">
-        <option value="4">~1000 tokens</option>
-        <option value="8" selected>~2000 tokens</option>
-        <option value="12">~3000 tokens</option>
-        <option value="16">~4000 tokens</option>
+    <div class="fg"><div class="fl">Min liveness</div>
+      <select id="f-lv">
+        <option value="0">Any</option>
+        <option value="4">4+ (viable)</option>
+        <option value="6" selected>6+ (confirmed)</option>
+        <option value="8">8+ (strong)</option>
       </select>
     </div>
-    <div class="filter-group">
-      <div class="filter-lbl">Show only</div>
+    <div class="fg"><div class="fl">Pages (250/page)</div>
+      <select id="f-pages">
+        <option value="4">~1000</option>
+        <option value="8" selected>~2000</option>
+        <option value="12">~3000</option>
+        <option value="16">~4000</option>
+      </select>
+    </div>
+    <div class="fg"><div class="fl">Show only</div>
       <select id="f-verdict" onchange="reSort()">
         <option value="">All results</option>
-        <option value="BUY">Buy only</option>
-        <option value="ACCUMULATE">Accumulate + above</option>
+        <option value="BUY">Buy signals</option>
+        <option value="ACCUMULATE">Accumulate+</option>
+        <option value="no-supply">Exclude supply risk</option>
         <option value="wb">Webull tradable</option>
         <option value="cb">Coinbase listed</option>
         <option value="bn">Binance listed</option>
@@ -151,17 +211,14 @@ tr:last-child td{border-bottom:none}
     </div>
   </div>
 
-  <div class="progress-wrap" id="progress-wrap">
-    <div class="progress-bar"><div class="progress-fill" id="pbar"></div></div>
-    <div class="status-line" id="status">Ready</div>
+  <div class="prog-wrap" id="prog-wrap">
+    <div class="prog-bar"><div class="prog-fill" id="pbar"></div></div>
+    <div class="status" id="status">—</div>
   </div>
-  <div class="status-line" id="status2">Ready — press Run Scan. Full 4000-token scan takes ~8 minutes. Use fewer pages for a faster result.</div>
+  <div class="status" id="status2" style="margin-bottom:10px">Ready — press Run Scan. Fetches BTC regime first, then scans tokens. Click column headers to sort.</div>
 
   <div class="metrics" id="metrics"></div>
-
-  <div id="results-wrap">
-    <div class="empty-state" id="empty">Press Run Scan to begin. Results appear here as tokens are scored.</div>
-  </div>
+  <div id="results-wrap"><div class="empty-state">Press Run Scan to begin.</div></div>
 </div>
 
 <!-- MODAL -->
@@ -173,494 +230,663 @@ tr:last-child td{border-bottom:none}
 </div>
 
 <script>
-// ── WEBULL MAP (from your file) ──
 const WB_MAP = {"BCH": {"name": "Bitcoin Cash", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Major", "tier": "Large Cap"}, "BNB": {"name": "BNB", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Major", "tier": "Mega Cap"}, "BTC": {"name": "Bitcoin", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Major", "tier": "Mega Cap"}, "DASH": {"name": "Dash", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Major", "tier": "Mid Cap"}, "ETC": {"name": "Ethereum Classic", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Major", "tier": "Large Cap"}, "ETH": {"name": "Ethereum", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Major", "tier": "Mega Cap"}, "FIL": {"name": "Filecoin", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Major", "tier": "Mid Cap"}, "LINK": {"name": "Chainlink", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Major", "tier": "Large Cap"}, "LTC": {"name": "Litecoin", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Major", "tier": "Large Cap"}, "PAXG": {"name": "PAX Gold", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Major", "tier": "Large Cap"}, "QNT": {"name": "Quant", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Major", "tier": "Mid Cap"}, "VET": {"name": "VeChain", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Major", "tier": "Mid Cap"}, "XTZ": {"name": "Tezos", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Major", "tier": "Mid Cap"}, "ZEC": {"name": "Zcash", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Major", "tier": "Large Cap"}, "ADA": {"name": "ADA", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "L1 / L2", "tier": "Large Cap"}, "ALGO": {"name": "Algorand", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "L1 / L2", "tier": "Mid Cap"}, "APT": {"name": "Aptos", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "L1 / L2", "tier": "Mid Cap"}, "ARB": {"name": "Arbitrum", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "L1 / L2", "tier": "Mid Cap"}, "ATOM": {"name": "ATOM", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "L1 / L2", "tier": "Mid Cap"}, "AVAX": {"name": "Avalanche", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "L1 / L2", "tier": "Large Cap"}, "BERA": {"name": "Berachain", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "L1 / L2", "tier": "Mid Cap"}, "CELO": {"name": "Celo", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "L1 / L2", "tier": "Small Cap"}, "CFX": {"name": "Conflux", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "L1 / L2", "tier": "Small Cap"}, "CRO": {"name": "Cronos", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": false, "on_bn_us": false, "category": "L1 / L2", "tier": "Large Cap"}, "DOT": {"name": "Polkadot", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "L1 / L2", "tier": "Large Cap"}, "EGLD": {"name": "MultiversX", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "L1 / L2", "tier": "Mid Cap"}, "FLR": {"name": "Flare", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": false, "on_bn_us": false, "category": "L1 / L2", "tier": "Mid Cap"}, "HBAR": {"name": "Hedera", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "L1 / L2", "tier": "Large Cap"}, "HIVE": {"name": "Hive", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "L1 / L2", "tier": "Small Cap"}, "ICP": {"name": "Internet Computer", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "L1 / L2", "tier": "Large Cap"}, "IMX": {"name": "Immutable X", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "L1 / L2", "tier": "Mid Cap"}, "IOST": {"name": "IOST", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "L1 / L2", "tier": "Small Cap"}, "IOTA": {"name": "IOTA", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "L1 / L2", "tier": "Mid Cap"}, "KAIA": {"name": "Kaia", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "L1 / L2", "tier": "Mid Cap"}, "KAVA": {"name": "Kava", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "L1 / L2", "tier": "Small Cap"}, "LINEA": {"name": "Linea", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "L1 / L2", "tier": "Small Cap"}, "MANTA": {"name": "Manta", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "L1 / L2", "tier": "Small Cap"}, "MANTLE": {"name": "Mantle", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": false, "on_bn_us": false, "category": "L1 / L2", "tier": "Large Cap"}, "METIS": {"name": "MetisDAO", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "L1 / L2", "tier": "Small Cap"}, "NEAR": {"name": "NEAR Protocol", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "L1 / L2", "tier": "Large Cap"}, "NEO": {"name": "NEO", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "L1 / L2", "tier": "Mid Cap"}, "NTRN": {"name": "Neutron", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "L1 / L2", "tier": "Small Cap"}, "ONDO": {"name": "Ondo", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "L1 / L2", "tier": "Large Cap"}, "ONE": {"name": "Harmony", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "L1 / L2", "tier": "Small Cap"}, "OP": {"name": "Optimism", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "L1 / L2", "tier": "Mid Cap"}, "OSMO": {"name": "Osmosis", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "L1 / L2", "tier": "Small Cap"}, "POL": {"name": "Polygon Ecosystem Token", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "L1 / L2", "tier": "Large Cap"}, "QTUM": {"name": "Qtum", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "L1 / L2", "tier": "Small Cap"}, "S": {"name": "Sonic", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "L1 / L2", "tier": "Mid Cap"}, "SEI": {"name": "Sei", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "L1 / L2", "tier": "Mid Cap"}, "SOL": {"name": "Solana", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "L1 / L2", "tier": "Mega Cap"}, "STRK": {"name": "Starknet", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "L1 / L2", "tier": "Mid Cap"}, "SUI": {"name": "Sui", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "L1 / L2", "tier": "Large Cap"}, "THETA": {"name": "Theta Token", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "L1 / L2", "tier": "Mid Cap"}, "TON": {"name": "Toncoin", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "L1 / L2", "tier": "Large Cap"}, "TRX": {"name": "TRON", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "L1 / L2", "tier": "Mega Cap"}, "XEC": {"name": "eCash", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "L1 / L2", "tier": "Mid Cap"}, "XLM": {"name": "Stellar", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "L1 / L2", "tier": "Large Cap"}, "XRP": {"name": "XRP", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "L1 / L2", "tier": "Mega Cap"}, "ZIL": {"name": "Zilliqa", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "L1 / L2", "tier": "Small Cap"}, "ZK": {"name": "zkSync", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "L1 / L2", "tier": "Mid Cap"}, "1INCH": {"name": "1inch", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "DeFi", "tier": "Small Cap"}, "AAVE": {"name": "AAVE", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "DeFi", "tier": "Large Cap"}, "AERO": {"name": "Aerodrome", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": false, "on_bn_us": false, "category": "DeFi", "tier": "Mid Cap"}, "ALCX": {"name": "Alchemix", "wb_tradable": false, "wb_watch": true, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "DeFi", "tier": "Small Cap"}, "BAL": {"name": "Balancer", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": false, "on_bn_us": false, "category": "DeFi", "tier": "Small Cap"}, "CAKE": {"name": "PancakeSwap", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "DeFi", "tier": "Mid Cap"}, "COMP": {"name": "Compound", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "DeFi", "tier": "Mid Cap"}, "COW": {"name": "CoW Protocol", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "DeFi", "tier": "Small Cap"}, "CRV": {"name": "Curve DAO", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "DeFi", "tier": "Mid Cap"}, "CVX": {"name": "Convex Finance", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "DeFi", "tier": "Small Cap"}, "DODO": {"name": "DODO", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "DeFi", "tier": ""}, "DYDX": {"name": "dYdX", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "DeFi", "tier": "Mid Cap"}, "ENA": {"name": "Ethena", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "DeFi", "tier": "Mid Cap"}, "ENSO": {"name": "Enso", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "DeFi", "tier": ""}, "ETHFI": {"name": "Ether.fi", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "DeFi", "tier": "Mid Cap"}, "EUL": {"name": "Euler", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "DeFi", "tier": "Small Cap"}, "FARM": {"name": "Harvest Finance", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "DeFi", "tier": "Small Cap"}, "FIDA": {"name": "Bonfida", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "DeFi", "tier": "Small Cap"}, "GMX": {"name": "GMX", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "DeFi", "tier": "Small Cap"}, "GNS": {"name": "Gains Network", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "DeFi", "tier": ""}, "INJ": {"name": "Injective", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "DeFi", "tier": "Mid Cap"}, "JST": {"name": "JUST", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "DeFi", "tier": "Mid Cap"}, "LAYER": {"name": "Solayer", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "DeFi", "tier": "Small Cap"}, "LDO": {"name": "Lido DAO", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "DeFi", "tier": "Mid Cap"}, "LQTY": {"name": "Liquity", "wb_tradable": false, "wb_watch": true, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "DeFi", "tier": "Small Cap"}, "MORPHO": {"name": "Morpho", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "DeFi", "tier": "Mid Cap"}, "NEXO": {"name": "Nexo", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "DeFi", "tier": "Mid Cap"}, "ORCA": {"name": "Orca", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "DeFi", "tier": "Small Cap"}, "PENDLE": {"name": "Pendle", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "DeFi", "tier": "Mid Cap"}, "QI": {"name": "BENQI", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "DeFi", "tier": "Small Cap"}, "RAY": {"name": "Raydium", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "DeFi", "tier": "Mid Cap"}, "RDNT": {"name": "Radiant Capital", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "DeFi", "tier": "Small Cap"}, "RESOLV": {"name": "RESOLV", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "DeFi", "tier": ""}, "RPL": {"name": "Rocket Pool", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "DeFi", "tier": "Small Cap"}, "RUNE": {"name": "THORChain", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "DeFi", "tier": "Mid Cap"}, "SNX": {"name": "Synthetix", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "DeFi", "tier": "Mid Cap"}, "SPELL": {"name": "Spell Token", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "DeFi", "tier": "Small Cap"}, "SSV": {"name": "SSV Token", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "DeFi", "tier": ""}, "STG": {"name": "Stargate Finance", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "DeFi", "tier": "Small Cap"}, "SUSHI": {"name": "SushiSwap", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "DeFi", "tier": "Small Cap"}, "SYRUP": {"name": "Maple Finance", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "DeFi", "tier": "Small Cap"}, "THE": {"name": "THENA", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "DeFi", "tier": ""}, "UNI": {"name": "Uniswap", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "DeFi", "tier": "Large Cap"}, "USUAL": {"name": "Usual", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "DeFi", "tier": "Small Cap"}, "VELODROME": {"name": "VELODROME", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "DeFi", "tier": "Small Cap"}, "YFI": {"name": "yearn.finance", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "DeFi", "tier": "Mid Cap"}, "ZRX": {"name": "0x Protocol", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "DeFi", "tier": "Small Cap"}, "AI": {"name": "Sleepless AI", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "AI / Data", "tier": ""}, "AIOZ": {"name": "AIOZ Network", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": false, "on_bn_us": false, "category": "AI / Data", "tier": "Small Cap"}, "AIXBT": {"name": "aixbt by Virtuals", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "AI / Data", "tier": ""}, "ALLO": {"name": "Allora", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "AI / Data", "tier": ""}, "ARKM": {"name": "ARKM", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "AI / Data", "tier": "Mid Cap"}, "BICO": {"name": "Biconomy", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "AI / Data", "tier": "Small Cap"}, "CGPT": {"name": "ChainGPT", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "AI / Data", "tier": "Small Cap"}, "FET": {"name": "ASI Alliance", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "AI / Data", "tier": "Mid Cap"}, "GRT": {"name": "The Graph", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "AI / Data", "tier": "Mid Cap"}, "HYPER": {"name": "Hyperlane", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "AI / Data", "tier": "Small Cap"}, "IO": {"name": "io.net", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "AI / Data", "tier": "Mid Cap"}, "KAITO": {"name": "Kaito", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "AI / Data", "tier": "Mid Cap"}, "KITE": {"name": "Kite", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "AI / Data", "tier": "Mid Cap"}, "MDT": {"name": "Measurable Data Token", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "AI / Data", "tier": ""}, "OCEAN": {"name": "OCEAN", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": false, "on_bn_us": true, "category": "AI / Data", "tier": "Small Cap"}, "RENDER": {"name": "Render", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "AI / Data", "tier": "Mid Cap"}, "SAHARA": {"name": "Sahara AI", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "AI / Data", "tier": ""}, "SENT": {"name": "Sentient", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "AI / Data", "tier": ""}, "TAO": {"name": "Bittensor", "wb_tradable": true, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "AI / Data", "tier": "Large Cap"}, "VIRTUAL": {"name": "Virtuals Protocol", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "AI / Data", "tier": "Mid Cap"}, "ALICE": {"name": "My Neighbor Alice", "wb_tradable": false, "wb_watch": true, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "Gaming / NFT", "tier": "Small Cap"}, "ANIME": {"name": "Animecoin", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "Gaming / NFT", "tier": "Small Cap"}, "APE": {"name": "ApeCoin", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Gaming / NFT", "tier": "Small Cap"}, "AXS": {"name": "Axie Infinity", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Gaming / NFT", "tier": "Mid Cap"}, "BEAMX": {"name": "Beam", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Gaming / NFT", "tier": ""}, "BIGTIME": {"name": "Big Time", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Gaming / NFT", "tier": "Small Cap"}, "CATI": {"name": "Catizen", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Gaming / NFT", "tier": "Small Cap"}, "ENJ": {"name": "Enjin Coin", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "Gaming / NFT", "tier": "Small Cap"}, "FLOW": {"name": "Flow", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Gaming / NFT", "tier": "Mid Cap"}, "GALA": {"name": "Gala", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "Gaming / NFT", "tier": "Small Cap"}, "GODS": {"name": "Gods Unchained", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": false, "on_bn_us": false, "category": "Gaming / NFT", "tier": "Small Cap"}, "HIGH": {"name": "Highstreet", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Gaming / NFT", "tier": "Small Cap"}, "ILV": {"name": "Illuvium", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Gaming / NFT", "tier": "Small Cap"}, "LRDS": {"name": "BLOCKLORDS", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": false, "on_bn_us": false, "category": "Gaming / NFT", "tier": "Small Cap"}, "MAGIC": {"name": "MAGIC", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Gaming / NFT", "tier": "Small Cap"}, "MANA": {"name": "MANA", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Gaming / NFT", "tier": "Mid Cap"}, "ORBS": {"name": "Orbs", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": false, "on_bn_us": true, "category": "Gaming / NFT", "tier": ""}, "ORDI": {"name": "ORDI", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Gaming / NFT", "tier": "Mid Cap"}, "PENGU": {"name": "Pudgy Penguins", "wb_tradable": true, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "Gaming / NFT", "tier": "Mid Cap"}, "PIXEL": {"name": "Pixels", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Gaming / NFT", "tier": "Small Cap"}, "RONIN": {"name": "Ronin", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Gaming / NFT", "tier": "Mid Cap"}, "SAND": {"name": "The Sandbox", "wb_tradable": true, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "Gaming / NFT", "tier": "Mid Cap"}, "VOXEL": {"name": "Voxies", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": false, "on_bn_us": true, "category": "Gaming / NFT", "tier": "Small Cap"}, "1000CHEEMS": {"name": "1000 Cheems", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Meme", "tier": ""}, "1000MOG": {"name": "1000 MOG", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": false, "on_bn_us": true, "category": "Meme", "tier": "Small Cap"}, "1000REKT": {"name": "1000 REKT", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": false, "on_bn_us": true, "category": "Meme", "tier": ""}, "BOME": {"name": "Book of Meme", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Meme", "tier": "Mid Cap"}, "BONK": {"name": "Bonk", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Meme", "tier": "Mid Cap"}, "BRETT": {"name": "Brett (Based)", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": false, "on_bn_us": true, "category": "Meme", "tier": "Mid Cap"}, "BROCCOLI714": {"name": "CZ's Dog", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Meme", "tier": ""}, "DOGE": {"name": "Dogecoin", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Meme", "tier": "Mega Cap"}, "DOGS": {"name": "Dogs", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Meme", "tier": "Small Cap"}, "FARTCOIN": {"name": "Fartcoin", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": false, "on_bn_us": true, "category": "Meme", "tier": "Mid Cap"}, "FLOKI": {"name": "Floki", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Meme", "tier": "Mid Cap"}, "GIGA": {"name": "Gigachad", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": false, "on_bn_us": true, "category": "Meme", "tier": "Small Cap"}, "GIGGLE": {"name": "Giggle Fund", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Meme", "tier": ""}, "HMSTR": {"name": "Hamster Kombat", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Meme", "tier": "Small Cap"}, "LUNC": {"name": "Terra Classic", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Meme", "tier": "Small Cap"}, "MEME": {"name": "Memecoin", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Meme", "tier": ""}, "MEW": {"name": "cat in a dogs world", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": false, "on_bn_us": true, "category": "Meme", "tier": "Mid Cap"}, "MOODENG": {"name": "Moo Deng", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": false, "on_bn_us": true, "category": "Meme", "tier": "Mid Cap"}, "NEIRO": {"name": "First Neiro On Ethereum", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "Meme", "tier": "Small Cap"}, "NOBODY": {"name": "Nobody Sausage", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": false, "on_bn_us": true, "category": "Meme", "tier": ""}, "PEPE": {"name": "Pepe", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Meme", "tier": "Large Cap"}, "PNUT": {"name": "Peanut the Squirrel", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Meme", "tier": "Mid Cap"}, "POPCAT": {"name": "Popcat", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": false, "on_bn_us": true, "category": "Meme", "tier": "Small Cap"}, "PUMP": {"name": "Pump.fun", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Meme", "tier": "Mid Cap"}, "SHIB": {"name": "Shiba Inu", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Meme", "tier": "Large Cap"}, "TROLL": {"name": "TROLL", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": false, "on_bn_us": true, "category": "Meme", "tier": "Small Cap"}, "TRUMP": {"name": "OFFICIAL TRUMP", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Meme", "tier": "Mid Cap"}, "TURBO": {"name": "Turbo", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Meme", "tier": "Mid Cap"}, "WIF": {"name": "Dogwifhat", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Meme", "tier": "Mid Cap"}, "ACM": {"name": "AC Milan Fan Token", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Fan Token", "tier": "Small Cap"}, "ALPINE": {"name": "ALPINE", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "Fan Token", "tier": "Small Cap"}, "ASR": {"name": "AS Roma Fan Token", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Fan Token", "tier": "Small Cap"}, "ATM": {"name": "Atletico Madrid Fan Token", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Fan Token", "tier": "Small Cap"}, "BAR": {"name": "FC Barcelona Fan Token", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Fan Token", "tier": "Small Cap"}, "CITY": {"name": "Manchester City Fan Token", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Fan Token", "tier": "Small Cap"}, "JUV": {"name": "Juventus Fan Token", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Fan Token", "tier": "Small Cap"}, "LAZIO": {"name": "Lazio Fan Token", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "Fan Token", "tier": "Small Cap"}, "OG": {"name": "OG Fan Token", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Fan Token", "tier": "Small Cap"}, "PORTO": {"name": "FC Porto Fan Token", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "Fan Token", "tier": "Small Cap"}, "PSG": {"name": "PSG Fan Token", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Fan Token", "tier": "Small Cap"}, "SANTOS": {"name": "Santos FC Fan Token", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "Fan Token", "tier": "Small Cap"}, "0G": {"name": "0G", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "1000CAT": {"name": "1000 Simons Cat", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "1000SATS": {"name": "1000 SATS", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "1MBABYDOGE": {"name": "1M Baby Doge", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "2Z": {"name": "DoubleZero", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "A": {"name": "Vaulta", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": ""}, "A2Z": {"name": "Arena-Z", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": ""}, "ABT": {"name": "Arcblock", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": false, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "ACE": {"name": "Fusionist", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "ACH": {"name": "Alchemy Pay", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": "Small Cap"}, "ACS": {"name": "Access Protocol", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": false, "on_bn_us": false, "category": "Altcoin", "tier": "Micro Cap"}, "ACT": {"name": "Act I : The AI Prophecy", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "ACX": {"name": "Across Protocol", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "ADX": {"name": "AdEx", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": ""}, "AERGO": {"name": "Aergo", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": false, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "AEVO": {"name": "AEVO", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "AGLD": {"name": "Adventure Gold", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "AKT": {"name": "Akash Network", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": false, "on_bn_us": false, "category": "Altcoin", "tier": "Mid Cap"}, "ALEO": {"name": "Aleo", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": false, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "ALEPH": {"name": "Aleph Cloud", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": false, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "ALT": {"name": "AltLayer", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "AMP": {"name": "Amp", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "ANKR": {"name": "Ankr", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": "Small Cap"}, "API3": {"name": "API3", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": "Small Cap"}, "AR": {"name": "Arweave", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "ARDR": {"name": "ARDR", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "ARK": {"name": "Ark", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "ARPA": {"name": "ARPA Chain", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "ASM": {"name": "Assemble AI", "wb_tradable": false, "wb_watch": true, "on_coinbase": false, "on_bn_global": false, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "AST": {"name": "AirSwap", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": false, "on_bn_us": false, "category": "Altcoin", "tier": "Micro Cap"}, "ASTER": {"name": "ASTER", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": "Large Cap"}, "ASTR": {"name": "Astar", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": "Small Cap"}, "AT": {"name": "APRO", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "ATA": {"name": "Automata", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "AUCTION": {"name": "Bounce Finance", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "AUDIO": {"name": "Audius", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": "Small Cap"}, "AURORA": {"name": "Aurora", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": false, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "AVA": {"name": "AVA", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "AVNT": {"name": "Avantis", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": ""}, "AVT": {"name": "Aventus", "wb_tradable": false, "wb_watch": true, "on_coinbase": false, "on_bn_global": false, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "AWE": {"name": "AWE Network", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "AXL": {"name": "Axelar", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": "Mid Cap"}, "BABY": {"name": "Babylon", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "BADGER": {"name": "Badger DAO", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": false, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "BANANA": {"name": "Banana Gun", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "BANANAS31": {"name": "Banana For Scale", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "BAND": {"name": "Band Protocol", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": "Small Cap"}, "BANK": {"name": "Lorenzo Protocol", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "BARD": {"name": "Lombard", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "BAT": {"name": "Basic Attention Token", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": "Small Cap"}, "BB": {"name": "BounceBit", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "BEAM": {"name": "BEAM", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": false, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "BEL": {"name": "Bella Protocol", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "BIFI": {"name": "Beefy Finance", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "BIO": {"name": "Bio Protocol", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "BLAST": {"name": "Blast", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": false, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "BLUR": {"name": "Blur", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": "Small Cap"}, "BLZ": {"name": "Bluzelle", "wb_tradable": false, "wb_watch": true, "on_coinbase": false, "on_bn_global": false, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "BMT": {"name": "Bubblemaps", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "BNT": {"name": "Bancor", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": "Small Cap"}, "BOBA": {"name": "Boba Network", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": false, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "BOSON": {"name": "Boson Protocol", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": false, "on_bn_us": true, "category": "Altcoin", "tier": ""}, "BREV": {"name": "Brevis", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "BTRST": {"name": "Braintrust", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": false, "on_bn_us": true, "category": "Altcoin", "tier": "Small Cap"}, "BTTC": {"name": "BitTorrent", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "C": {"name": "Chainbase", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "C98": {"name": "Coin98", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "CELR": {"name": "Celer Network", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": "Small Cap"}, "CETUS": {"name": "Cetus Protocol", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "CGLD": {"name": "Celo Gold", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": false, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "CHR": {"name": "Chromia", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "CHZ": {"name": "Chiliz", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": "Mid Cap"}, "CKB": {"name": "CKB", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "COOKIE": {"name": "Cookie DAO", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "CORECHAIN": {"name": "Core", "wb_tradable": false, "wb_watch": true, "on_coinbase": false, "on_bn_global": false, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "COS": {"name": "Contentos", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "COTI": {"name": "COTI", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": "Small Cap"}, "CTK": {"name": "Shentu", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "CTSI": {"name": "Cartesi", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": "Small Cap"}, "CTX": {"name": "Cryptex Finance", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": false, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "CVC": {"name": "Civic", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "CYBER": {"name": "CYBER", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "D": {"name": "Dar Open Network", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": ""}, "DATA": {"name": "Streamr", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": false, "on_bn_us": true, "category": "Altcoin", "tier": ""}, "DCR": {"name": "Decred", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": "Mid Cap"}, "DEGO": {"name": "DEGO", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "DENT": {"name": "DENT", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "DEXE": {"name": "DeXe", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": "Mid Cap"}, "DEXT": {"name": "DEXTools", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": false, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "DGB": {"name": "DigiByte", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": ""}, "DIA": {"name": "DIA", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": "Small Cap"}, "DIMO": {"name": "DIMO", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": false, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "DNT": {"name": "district0x", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": false, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "DOLO": {"name": "DOLO", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "DOOD": {"name": "Doodles", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": false, "on_bn_us": true, "category": "Altcoin", "tier": "Small Cap"}, "DRIFT": {"name": "Drift Protocol", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": false, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "DUSK": {"name": "Dusk", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": ""}, "DYM": {"name": "Dymension", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "EDEN": {"name": "OpenEden", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "EDGE": {"name": "EDGE", "wb_tradable": false, "wb_watch": true, "on_coinbase": false, "on_bn_global": false, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "EDU": {"name": "Open Campus", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "EIGEN": {"name": "EigenLayer", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": "Mid Cap"}, "ELA": {"name": "Elastos", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": false, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "ENS": {"name": "ENS Domains", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": "Mid Cap"}, "EPIC": {"name": "Epic Chain", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "ERA": {"name": "Caldera", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "ESP": {"name": "Espresso", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "EURI": {"name": "Eurite", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "F": {"name": "SynFutures", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "FF": {"name": "Falcon Finance", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "FIO": {"name": "FIO Protocol", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "FIS": {"name": "StaFi", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": false, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "FLUX": {"name": "Flux", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": ""}, "FOGO": {"name": "FOGO", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "FORM": {"name": "Four", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "FORT": {"name": "Forta", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": false, "on_bn_us": true, "category": "Altcoin", "tier": "Small Cap"}, "FORTH": {"name": "Ampleforth Governance", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": "Small Cap"}, "FOX": {"name": "ShapeShift FOX", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": false, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "FTT": {"name": "FTX Token", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "FUN": {"name": "FunToken", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "G": {"name": "Gravity", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": ""}, "GAS": {"name": "NeoGas", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": ""}, "GFI": {"name": "Goldfinch", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": false, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "GHST": {"name": "Aavegotchi", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": false, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "GLM": {"name": "Golem", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": "Small Cap"}, "GLMR": {"name": "Glimmer", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "GMT": {"name": "STEPN", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "GNO": {"name": "Gnosis", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": "Mid Cap"}, "GPS": {"name": "GoPlus Security", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "GST": {"name": "Green Satoshi Token", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": false, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "GTC": {"name": "Gitcoin", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": "Small Cap"}, "GUN": {"name": "GUNZ", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "HAEDAL": {"name": "Haedal", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "HEI": {"name": "Heima", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "HEMI": {"name": "HEMI", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "HFT": {"name": "Hashflow", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "HNT": {"name": "Helium", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": false, "on_bn_us": false, "category": "Altcoin", "tier": "Mid Cap"}, "HOLO": {"name": "Holoworld AI", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "HOME": {"name": "Defi App", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "HONEY": {"name": "Hivemapper", "wb_tradable": false, "wb_watch": true, "on_coinbase": false, "on_bn_global": false, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "HOOK": {"name": "Hooked Protocol", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "HOT": {"name": "Holo", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "HUMA": {"name": "Huma Finance", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "HYPE": {"name": "Hyperliquid", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": false, "on_bn_us": true, "category": "Altcoin", "tier": "Large Cap"}, "ICX": {"name": "ICON", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": ""}, "ID": {"name": "Space ID", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "IDEX": {"name": "IDEX", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "INDEX": {"name": "Index Cooperative", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": false, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "INIT": {"name": "Initia", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "INV": {"name": "Inverse Finance", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": false, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "IOTX": {"name": "IoTeX", "wb_tradable": false, "wb_watch": true, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": "Small Cap"}, "IP": {"name": "Story Protocol", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": false, "on_bn_us": false, "category": "Altcoin", "tier": "Mid Cap"}, "IQ": {"name": "IQ", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "JASMY": {"name": "JasmyCoin", "wb_tradable": true, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "JOE": {"name": "JOE", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "JTO": {"name": "Jito", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": "Mid Cap"}, "JUP": {"name": "Jupiter", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": "Mid Cap"}, "KARRAT": {"name": "KARRAT", "wb_tradable": false, "wb_watch": true, "on_coinbase": false, "on_bn_global": false, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "KERNEL": {"name": "KernelDAO", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "KMNO": {"name": "Kamino", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "KNC": {"name": "Kyber Network", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": ""}, "KRL": {"name": "Kryll", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": false, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "KSM": {"name": "Kusama", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": "Small Cap"}, "L3": {"name": "Layer3", "wb_tradable": false, "wb_watch": true, "on_coinbase": false, "on_bn_global": false, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "LA": {"name": "Lagrange", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "LCX": {"name": "LCX", "wb_tradable": false, "wb_watch": true, "on_coinbase": false, "on_bn_global": false, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "LISTA": {"name": "Lista", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "LPT": {"name": "Livepeer", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": "Small Cap"}, "LRC": {"name": "Loopring", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": "Small Cap"}, "LSK": {"name": "Lisk", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": ""}, "LTO": {"name": "LTO Network", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": false, "on_bn_us": true, "category": "Altcoin", "tier": ""}, "LUMIA": {"name": "LUMIA", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "LUNA": {"name": "Terra", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "MANTRA": {"name": "MANTRA", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "MASK": {"name": "Mask Network", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": "Small Cap"}, "MAV": {"name": "Maverick Protocol", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "MBL": {"name": "MovieBloc", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "MBOX": {"name": "MOBOX", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "ME": {"name": "Magic Eden", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": ""}, "MET": {"name": "Meteora", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "MINA": {"name": "Mina Protocol", "wb_tradable": false, "wb_watch": true, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": "Mid Cap"}, "MIRA": {"name": "Mira", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "MITO": {"name": "Mitosis", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "MLN": {"name": "Enzyme", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "MMT": {"name": "Momentum", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "MOVE": {"name": "Movement", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "MOVR": {"name": "Moonriver", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "MTL": {"name": "Metal DAO", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "MUBARAK": {"name": "Mubarak", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "NEWT": {"name": "Newton Protocol", "wb_tradable": false, "wb_watch": true, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "NFP": {"name": "NFPrompt", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "NIGHT": {"name": "Midnight", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "NIL": {"name": "Nillion", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "NMR": {"name": "Numeraire", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": "Small Cap"}, "NOM": {"name": "Nomina", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "NOT": {"name": "Notcoin", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "NPC": {"name": "Non-Playable Coin", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": false, "on_bn_us": true, "category": "Altcoin", "tier": ""}, "NXPC": {"name": "Nexpace", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "OGN": {"name": "Origin Token", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": "Small Cap"}, "ONG": {"name": "Ontology Gas", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": ""}, "ONT": {"name": "Ontology", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": ""}, "OPEN": {"name": "OpenLedger", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "OPN": {"name": "OPINION", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "OXT": {"name": "Orchid", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "PARTI": {"name": "Particle Network", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "PEOPLE": {"name": "ConstitutionDAO", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "PHA": {"name": "Phala Network", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "PHB": {"name": "Phoenix", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "PIVX": {"name": "PIVX", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "PLUME": {"name": "Plume", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "POLYX": {"name": "Polymesh", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": ""}, "POND": {"name": "Marlin", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": ""}, "PORTAL": {"name": "Portal", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "POWR": {"name": "Powerledger", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "PRIME": {"name": "Echelon Prime", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": false, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "PROM": {"name": "Prometeus", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": ""}, "PROVE": {"name": "Succinct", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "PUNDIX": {"name": "Pundi X", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "PURR": {"name": "Purr", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": false, "on_bn_us": true, "category": "Altcoin", "tier": ""}, "PYR": {"name": "Vulcan Forged", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "PYTH": {"name": "Pyth Network", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": "Mid Cap"}, "QKC": {"name": "QuarkChain", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "QUICK": {"name": "QuickSwap", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "RAD": {"name": "Radworks", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": ""}, "RARE": {"name": "SuperRare", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": ""}, "RAVE": {"name": "RAVE", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": false, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "RED": {"name": "RedStone", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "REEF": {"name": "Reef", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": false, "on_bn_us": true, "category": "Altcoin", "tier": ""}, "REQ": {"name": "Request Network", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": ""}, "REZ": {"name": "Renzo", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "RHEA": {"name": "RHEA Finance", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": false, "on_bn_us": true, "category": "Altcoin", "tier": ""}, "RIF": {"name": "Rootstock Infrastructure", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "RLC": {"name": "iExec RLC", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": ""}, "ROBO": {"name": "Fabric Protocol", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "ROSE": {"name": "Oasis Network", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": "Small Cap"}, "RSR": {"name": "Reserve Rights", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "RVN": {"name": "Ravencoin", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": ""}, "SAFE": {"name": "SAFE", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": false, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "SAGA": {"name": "Saga", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "SAPIEN": {"name": "Sapien", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "SC": {"name": "Siacoin", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "SCR": {"name": "Scroll", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "SCRT": {"name": "Secret", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "SFP": {"name": "SafePal", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "SHELL": {"name": "MyShell", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "SIGN": {"name": "Sign", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "SKL": {"name": "SKALE", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": ""}, "SKY": {"name": "Sky", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": "Mid Cap"}, "SLP": {"name": "Smooth Love Potion", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": ""}, "SOLV": {"name": "Solv Protocol", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "SOMI": {"name": "Somnia", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "SOPH": {"name": "Sophon", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "SPK": {"name": "Spark", "wb_tradable": false, "wb_watch": true, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "SPX": {"name": "SPX6900", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": false, "on_bn_us": true, "category": "Altcoin", "tier": "Small Cap"}, "STEEM": {"name": "Steem", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "STO": {"name": "StakeStone", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "STORJ": {"name": "Storj", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": "Small Cap"}, "STRAX": {"name": "Stratis", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "STX": {"name": "Stacks", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": "Mid Cap"}, "SUN": {"name": "SUN", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "SUPER": {"name": "SuperVerse", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "SXP": {"name": "Solar", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "SXT": {"name": "Space and Time", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "SYN": {"name": "Synapse", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "SYS": {"name": "Syscoin", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": ""}, "T": {"name": "Threshold", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": ""}, "TFUEL": {"name": "Theta Fuel", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": "Small Cap"}, "TIA": {"name": "Celestia", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": "Mid Cap"}, "TKO": {"name": "Tokocrypto", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "TLM": {"name": "Alien Worlds", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": ""}, "TNSR": {"name": "TNSR", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "TOSHI": {"name": "Toshi", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": false, "on_bn_us": true, "category": "Altcoin", "tier": "Small Cap"}, "TOWNS": {"name": "Towns Protocol", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "TRAC": {"name": "OriginTrail", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": false, "on_bn_us": true, "category": "Altcoin", "tier": ""}, "TRB": {"name": "Tellor", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "TREE": {"name": "Treehouse", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "TRU": {"name": "TrueFi", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "TST": {"name": "Test", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "TURTLE": {"name": "Turtle", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "TUT": {"name": "Tutorial", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "TWT": {"name": "Trust Wallet Token", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": "Small Cap"}, "UMA": {"name": "UMA", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "USTC": {"name": "TerraClassicUSD", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "UTK": {"name": "xMoney", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "VANA": {"name": "Vana", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "VANRY": {"name": "Vanar", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "VARA": {"name": "VARA", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": false, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "VIC": {"name": "Viction", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "VTHO": {"name": "VeThor Token", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": ""}, "VVV": {"name": "Venice Token", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": false, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "W": {"name": "Wormhole", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "WAL": {"name": "Walrus", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "WAN": {"name": "Wanchain", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "WAXP": {"name": "WAX", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": ""}, "WCT": {"name": "WalletConnect", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "WELL": {"name": "WELL", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": false, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "WIN": {"name": "WINkLink", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "WLD": {"name": "Worldcoin", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": "Large Cap"}, "WLFI": {"name": "World Liberty Financial", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": "Large Cap"}, "WOO": {"name": "WOO", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "XAI": {"name": "Xai", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "XDC": {"name": "XDC Network", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": false, "on_bn_us": true, "category": "Altcoin", "tier": ""}, "XNO": {"name": "Nano", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": ""}, "XPL": {"name": "Plasma", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "XVG": {"name": "Verge", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "XVS": {"name": "Venus", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "YB": {"name": "Yield Basis", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "YGG": {"name": "Yield Guild Games", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "ZAMA": {"name": "ZAMA", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "ZBT": {"name": "Zerobase", "wb_tradable": false, "wb_watch": false, "on_coinbase": false, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "ZEN": {"name": "Horizen", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": true, "category": "Altcoin", "tier": ""}, "ZKC": {"name": "Boundless", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "ZKP": {"name": "zkPass", "wb_tradable": false, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": ""}, "ZORA": {"name": "Zora Network", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": false, "on_bn_us": false, "category": "Altcoin", "tier": "Small Cap"}, "ZRO": {"name": "LayerZero", "wb_tradable": true, "wb_watch": false, "on_coinbase": true, "on_bn_global": true, "on_bn_us": false, "category": "Altcoin", "tier": "Mid Cap"}};
 
-// ── STABLECOIN / WRAPPED FILTER ──
-const SKIP_KEYWORDS = ['usd','usdt','usdc','dai','busd','tusd','frax','usde','usdp','fdusd',
+const SKIP_KW = ['usd','usdt','usdc','dai','busd','tusd','frax','usde','usdp','fdusd',
   'wrapped','staked','liquid staked','cbeth','wbtc','weth','wbnb','steth','reth','frxeth',
-  'lseth','jitosol','xaut','paxg','eurs','useless'];
+  'lseth','jitosol','xaut','paxg','eurs','useless','xusd','aeur','bfusd','kgst','rlusd'];
 
 function isStable(coin) {
-  const sym = (coin.symbol||'').toLowerCase();
-  const name = (coin.name||'').toLowerCase();
-  for (const k of SKIP_KEYWORDS) {
-    if (sym.includes(k) || name.includes(k)) return true;
-  }
-  return false;
+  const s=(coin.symbol||'').toLowerCase(), n=(coin.name||'').toLowerCase();
+  return SKIP_KW.some(k=>s.includes(k)||n.includes(k));
 }
 
 // ── STATE ──
-let results = [];
-let aborted = false;
-let scanning = false;
-let sortCol = 'composite';
-let sortDir = -1; // -1 = desc, 1 = asc
+let results=[], aborted=false, scanning=false;
+let sortCol='composite', sortDir=-1;
+let btcData=null;
+
+// ── REGIME ──
+async function fetchBTCRegime() {
+  try {
+    const r = await fetch('https://api.coingecko.com/api/v3/coins/bitcoin?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false');
+    const d = await r.json();
+    btcData = {
+      c7:  d.market_data.price_change_percentage_7d || 0,
+      c30: d.market_data.price_change_percentage_30d || 0,
+      c24: d.market_data.price_change_percentage_24h || 0,
+    };
+    renderRegime();
+  } catch(e) { btcData = null; }
+}
+
+function getRegime() {
+  if (!btcData) return {label:'Unknown regime',color:'var(--muted)',expectancy:'Unknown — BTC data unavailable',short:'unknown',adj:0};
+  const {c7,c30} = btcData;
+  if (c30>20&&c7>5)  return {label:'Bull expansion',   color:'var(--green)', expectancy:'Bounces historically most reliable — favorable entry window',   short:'bull',    adj:+10};
+  if (c7>5)          return {label:'Bull pullback',     color:'var(--green)', expectancy:'Temporary dip in uptrend — good bounce opportunity',           short:'bull',    adj:+6};
+  if (c7>-3&&c7<5)   return {label:'Ranging / chop',   color:'var(--amber)', expectancy:'Bounces less predictable — be selective, reduce size',          short:'chop',    adj:0};
+  if (c7<-15)        return {label:'Market panic',      color:'var(--red)',   expectancy:'High false-positive risk — avoid catching falling knives',       short:'panic',   adj:-18};
+  if (c7<-5)         return {label:'Correction',        color:'var(--amber)', expectancy:'Wait for BTC to stabilise before entering alts',                short:'correct', adj:-8};
+  return {label:'Uncertain',color:'var(--muted)',expectancy:'Unclear market direction',short:'unknown',adj:0};
+}
+
+function renderRegime() {
+  const reg = getRegime();
+  const b = document.getElementById('regime-banner');
+  b.classList.add('show');
+  b.style.borderLeftColor = reg.color;
+  b.style.borderLeft = '3px solid '+reg.color;
+  document.getElementById('regime-label').style.color = reg.color;
+  document.getElementById('regime-label').textContent = '● ' + reg.label;
+  document.getElementById('regime-detail').textContent = reg.expectancy;
+  if (btcData) {
+    const c7s = (btcData.c7>=0?'+':'')+btcData.c7.toFixed(1)+'%';
+    const c30s = (btcData.c30>=0?'+':'')+btcData.c30.toFixed(1)+'%';
+    document.getElementById('regime-btc').textContent = `BTC: ${c7s} / ${c30s}`;
+    document.getElementById('regime-btc').style.color = btcData.c7>=0?'var(--green)':'var(--red)';
+  }
+}
+
+// ── SCORING ──
+function supplyRisk(coin) {
+  const circ = coin.circulating_supply||0;
+  const total = coin.total_supply||circ;
+  const mx = coin.max_supply||total;
+  if (!circ||!total||total===0) return {score:0,label:'N/A',cls:'tm',note:'Supply data unavailable'};
+  const locked = (total-circ)/total;
+  const maxLocked = mx>0?(mx-circ)/mx:locked;
+  const risk = Math.max(locked,maxLocked*0.7);
+  if (risk>0.55) return {score:3,label:'HIGH',cls:'tr2',note:`${(risk*100).toFixed(0)}% supply not yet circulating — major dilution risk`};
+  if (risk>0.35) return {score:2,label:'MED',cls:'ta', note:`${(risk*100).toFixed(0)}% supply locked — moderate dilution risk`};
+  if (risk>0.15) return {score:1,label:'LOW',cls:'tb', note:`${(risk*100).toFixed(0)}% supply locked — minor risk`};
+  return {score:0,label:'CLEAR',cls:'tg',note:'Most supply already circulating'};
+}
+
+function dataIntegrity(coin, wb) {
+  let issues=[], score=10;
+  const liq=(coin.total_volume||0)/(coin.market_cap||1);
+  if (liq>1.5) { issues.push('Volume exceeds market cap — probable wash trading'); score-=4; }
+  else if (liq>0.8) { issues.push('Very high vol/mcap ratio — verify volume source'); score-=2; }
+  if (!wb&&(coin.total_volume||0)<200000) { issues.push('No major exchange listing found'); score-=3; }
+  if (coin.market_cap_rank>800&&(coin.total_volume||0)>5000000) { issues.push('Volume unusually high for market cap rank'); score-=2; }
+  if (wb&&!wb.on_bn_global&&!wb.on_coinbase) { issues.push('Not on Binance or Coinbase'); score-=2; }
+  score = Math.max(1,score);
+  return {
+    score,
+    label: score>=8?'HIGH':score>=5?'MED':'LOW',
+    cls:   score>=8?'tg':score>=5?'ta':'tr2',
+    issues
+  };
+}
+
+function relStrength(c7coin) {
+  if (!btcData) return null;
+  const diff = (c7coin||0)-(btcData.c7||0);
+  if (diff>8)  return {label:'↑ Strong',cls:'tg', note:`+${diff.toFixed(1)}% vs BTC 7d`};
+  if (diff>2)  return {label:'↑ Mild',  cls:'tb', note:`+${diff.toFixed(1)}% vs BTC 7d`};
+  if (diff>-5) return {label:'~ Inline',cls:'tm', note:`${diff.toFixed(1)}% vs BTC 7d`};
+  if (diff>-15)return {label:'↓ Weak',  cls:'ta', note:`${diff.toFixed(1)}% vs BTC 7d`};
+  return         {label:'↓↓ Severe',    cls:'tr2',note:`${diff.toFixed(1)}% vs BTC 7d`};
+}
+
+function athElapsed(coin) {
+  if (!coin.ath_date) return null;
+  const days = Math.floor((Date.now()-new Date(coin.ath_date))/(864e5));
+  if (days<90)  return {label:days+'d',cls:'tr2',note:'Recent ATH — may keep falling, high crash risk'};
+  if (days<365) return {label:Math.floor(days/30)+'mo',cls:'ta',note:'ATH within last year'};
+  return {label:(days/365).toFixed(1)+'y',cls:'tg',note:'Old ATH — more likely to have found a floor'};
+}
+
+function scoreToken(coin, wb) {
+  const vol=coin.total_volume||0, mcap=coin.market_cap||1;
+  const athDrop=Math.abs(coin.ath_change_percentage||0);
+  const c24=coin.price_change_percentage_24h||0;
+  const c7=coin.price_change_percentage_7d_in_currency||0;
+  const c14=coin.price_change_percentage_14d_in_currency||0;
+  const c30=coin.price_change_percentage_30d_in_currency||0;
+  const liq=vol/mcap;
+
+  // OVERSOLD
+  let os=0;
+  if (athDrop>=60&&athDrop<=90) os+=3; else if (athDrop>=50) os+=1; else if (athDrop>90) os+=1;
+  if (c7<=-20) os+=2; else if (c7<=-10) os+=1;
+  if (c24<=-8) os+=1;
+  if (liq>0.05) os+=1; if (liq>0.15) os+=1;
+  if (vol>500000) os+=1;
+  os=Math.min(os,10);
+
+  // LIVENESS
+  let lv=0;
+  if (vol>5000000) lv+=3; else if (vol>1000000) lv+=2; else if (vol>100000) lv+=1;
+  if (mcap>500000000) lv+=3; else if (mcap>50000000) lv+=2; else if (mcap>5000000) lv+=1;
+  if (wb) { if (wb.on_bn_global) lv+=2; else if (wb.on_coinbase) lv+=1; if (wb.wb_tradable) lv+=1; }
+  else if (vol>1000000) lv+=1;
+  lv=Math.min(lv,10);
+
+  // BOUNCE READINESS
+  let br=0;
+  if (c7>c30/4) br+=2;
+  if (c24>c7/7) br+=2;
+  if (c14>c30/2) br+=1;
+  if (liq>0.15) br+=2; else if (liq>0.07) br+=1;
+  if (athDrop>=65&&athDrop<=88) br+=2; else if (athDrop>=55) br+=1;
+  br=Math.min(br,10);
+
+  const composite=Math.round(os*0.30+lv*0.40+br*0.30);
+
+  // SUPPLY & DATA
+  const sr = supplyRisk(coin);
+  const di = dataIntegrity(coin, wb);
+  const rs = relStrength(c7);
+  const ath_age = athElapsed(coin);
+  const regime = getRegime();
+
+  // PROBABILITY
+  let prob = 25 + (composite*5.5);
+  prob += regime.adj;
+  if (sr.score===3) prob-=18; else if (sr.score===2) prob-=8;
+  if (di.score<5) prob-=12; else if (di.score<8) prob-=4;
+  if (rs) { if (rs.label.includes('Strong')) prob+=8; else if (rs.label.includes('↓↓')) prob-=8; else if (rs.label.includes('Weak')) prob-=3; }
+  if (ath_age&&ath_age.cls==='tr2') prob-=8; // recent crash
+  if (ath_age&&ath_age.cls==='tg') prob+=4;  // old ATH
+  prob=Math.max(10,Math.min(85,Math.round(prob)));
+
+  // CONFIDENCE
+  let conf, confCls;
+  if (lv>=7&&di.score>=8) { conf='High'; confCls='tg'; }
+  else if (lv>=5&&di.score>=5) { conf='Medium'; confCls='ta'; }
+  else { conf='Low'; confCls='tr2'; }
+
+  // ACTION
+  let action, actionCls;
+  if (prob>=65&&conf!=='Low'&&sr.score<3) { action='BUY'; actionCls='tg'; }
+  else if (prob>=50||sr.score===3&&prob>=65) { action='ACCUMULATE'; actionCls='tb'; }
+  else if (prob>=35) { action='WAIT'; actionCls='ta'; }
+  else { action='AVOID'; actionCls='tr2'; }
+  if (sr.score===3&&action==='BUY') { action='WAIT'; actionCls='ta'; }
+
+  return {os,lv,br,composite,sr,di,rs,ath_age,prob,conf,confCls,action,actionCls,
+    athDrop,vol,mcap,liq,c24,c7,c14,c30};
+}
 
 // ── SCAN ──
 async function startScan() {
   if (scanning) return;
-  scanning = true;
-  aborted = false;
-  results = [];
+  scanning=true; aborted=false; results=[];
+  const pages=parseInt(document.getElementById('f-pages').value);
+  const minAth=parseInt(document.getElementById('f-ath').value);
+  const minVol=parseInt(document.getElementById('f-vol').value);
+  const minLv=parseInt(document.getElementById('f-lv').value);
 
-  const pages = parseInt(document.getElementById('f-pages').value);
-  const minAth = parseInt(document.getElementById('f-ath').value);
-  const minVol = parseInt(document.getElementById('f-vol').value);
+  document.getElementById('scan-btn').disabled=true;
+  document.getElementById('stop-btn').style.display='inline-block';
+  document.getElementById('prog-wrap').classList.add('show');
+  document.getElementById('status2').style.display='none';
+  document.getElementById('metrics').style.display='none';
+  document.getElementById('results-wrap').innerHTML='<div class="empty-state">Fetching BTC regime data...</div>';
 
-  document.getElementById('scan-btn').disabled = true;
-  document.getElementById('stop-btn').style.display = 'inline-block';
-  document.getElementById('progress-wrap').classList.add('show');
-  document.getElementById('status2').style.display = 'none';
-  document.getElementById('empty').style.display = 'none';
-  document.getElementById('metrics').style.display = 'none';
-  document.getElementById('results-wrap').innerHTML = '<div class="empty-state" id="empty">Scanning...</div>';
+  setStatus('Fetching BTC market regime...',2);
+  await fetchBTCRegime();
+  await sleep(800);
 
-  let fetched = 0;
-  let passed = 0;
+  let fetched=0, passed=0;
 
-  for (let page = 1; page <= pages; page++) {
+  for (let page=1;page<=pages;page++) {
     if (aborted) break;
-    setStatus(`Fetching page ${page}/${pages} from CoinGecko...`, (page-1)/pages*90);
-
+    setStatus(`Scanning page ${page}/${pages} — ${fetched} fetched, ${passed} qualified...`,(page-1)/pages*90);
     try {
-      const url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=${page}&sparkline=false&price_change_percentage=7d,14d,30d`;
-      const r = await fetch(url);
+      const url=`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=${page}&sparkline=false&price_change_percentage=7d,14d,30d`;
+      const r=await fetch(url);
       if (!r.ok) {
-        if (r.status === 429) {
-          setStatus(`Rate limited — waiting 60s before continuing...`, (page-1)/pages*90);
-          await sleep(62000);
-          page--; continue;
-        }
+        if (r.status===429) { setStatus('Rate limited — waiting 65s...',(page-1)/pages*90); await sleep(66000); page--; continue; }
         break;
       }
-      const coins = await r.json();
+      const coins=await r.json();
       if (!coins.length) break;
-      fetched += coins.length;
-
+      fetched+=coins.length;
       for (const coin of coins) {
         if (aborted) break;
         if (isStable(coin)) continue;
-        const vol = coin.total_volume || 0;
-        const athDrop = Math.abs(coin.ath_change_percentage || 0);
-        const mcap = coin.market_cap || 0;
-        if (vol < minVol) continue;
-        if (athDrop < minAth) continue;
-        if (mcap < 1000000) continue;
-
-        const wb = WB_MAP[coin.symbol?.toUpperCase()] || null;
-        const scored = scoreToken(coin, wb);
-        results.push({ coin, wb, ...scored });
+        const vol=coin.total_volume||0;
+        const athDrop=Math.abs(coin.ath_change_percentage||0);
+        if (vol<minVol||athDrop<minAth||coin.market_cap<1000000) continue;
+        const wb=WB_MAP[coin.symbol?.toUpperCase()]||null;
+        const scored=scoreToken(coin,wb);
+        if (scored.lv<minLv) continue;
+        results.push({coin,wb,...scored});
         passed++;
       }
-
-      // Render incrementally every page
       renderTable();
-      renderMetrics(passed, fetched);
-
-    } catch(e) {
-      setStatus(`Error: ${e.message} — retrying in 5s...`, (page-1)/pages*90);
-      await sleep(5000);
-      page--;
-    }
-
-    // Rate limit pause between pages
-    if (page < pages && !aborted) await sleep(1400);
+      renderMetrics(passed,fetched);
+    } catch(e) { setStatus(`Error: ${e.message} — retrying...`,(page-1)/pages*90); await sleep(5000); page--; }
+    if (page<pages&&!aborted) await sleep(1400);
   }
 
-  setStatus(`Scan complete — ${passed} oversold tokens found from ${fetched} scanned. Click any row for analysis.`, 100);
-  scanning = false;
-  document.getElementById('scan-btn').disabled = false;
-  document.getElementById('scan-btn').textContent = '↻ Rescan';
-  document.getElementById('stop-btn').style.display = 'none';
-  document.getElementById('metrics').style.display = 'grid';
+  setStatus(`Scan complete — ${passed} tokens found. Click any row for full analysis.`,100);
+  scanning=false;
+  document.getElementById('scan-btn').disabled=false;
+  document.getElementById('scan-btn').textContent='↻ Rescan';
+  document.getElementById('stop-btn').style.display='none';
+  document.getElementById('metrics').style.display='grid';
 }
 
 function stopScan() {
-  aborted = true;
-  scanning = false;
-  document.getElementById('scan-btn').disabled = false;
-  document.getElementById('stop-btn').style.display = 'none';
-  setStatus(`Scan stopped. ${results.length} tokens found so far.`, 100);
-}
-
-// ── SCORING ──
-function scoreToken(coin, wb) {
-  const vol = coin.total_volume || 0;
-  const mcap = coin.market_cap || 1;
-  const athDrop = Math.abs(coin.ath_change_percentage || 0);
-  const c24 = coin.price_change_percentage_24h || 0;
-  const c7  = coin.price_change_percentage_7d_in_currency || 0;
-  const c14 = coin.price_change_percentage_14d_in_currency || 0;
-  const c30 = coin.price_change_percentage_30d_in_currency || 0;
-  const liq = vol / mcap;
-
-  // OVERSOLD (0-10)
-  let os = 0;
-  if (athDrop >= 60 && athDrop <= 90) os += 3;
-  else if (athDrop >= 50) os += 1;
-  else if (athDrop > 90) os += 1;
-  if (c7 <= -20) os += 2;
-  else if (c7 <= -10) os += 1;
-  if (c24 <= -8) os += 1;
-  if (liq > 0.05) os += 1;
-  if (liq > 0.15) os += 1;
-  if (vol > 500000) os += 1;
-  os = Math.min(os, 10);
-
-  // LIVENESS (0-10)
-  let lv = 0;
-  if (vol > 5000000) lv += 3;
-  else if (vol > 1000000) lv += 2;
-  else if (vol > 100000) lv += 1;
-  if (mcap > 500000000) lv += 3;
-  else if (mcap > 50000000) lv += 2;
-  else if (mcap > 5000000) lv += 1;
-  // Exchange listings from Webull map
-  if (wb) {
-    if (wb.on_bn_global) lv += 2;
-    else if (wb.on_coinbase) lv += 1;
-    if (wb.wb_tradable) lv += 1;
-  } else {
-    // Assume on some exchange since CoinGecko lists it with volume
-    if (vol > 1000000) lv += 1;
-  }
-  lv = Math.min(lv, 10);
-
-  // BOUNCE READINESS (0-10)
-  let br = 0;
-  // Deceleration of decline — most important signal
-  if (c7 > c30 / 4) br += 2; // weekly decline slowing vs monthly
-  if (c24 > c7 / 7) br += 2; // daily better than weekly average
-  if (c14 > c30 / 2) br += 1; // 14d better than 30d halved
-  // Volume expansion (capitulation)
-  if (liq > 0.15) br += 2;
-  else if (liq > 0.07) br += 1;
-  // ATH sweet spot
-  if (athDrop >= 65 && athDrop <= 88) br += 2;
-  else if (athDrop >= 55) br += 1;
-  br = Math.min(br, 10);
-
-  // COMPOSITE — weighted
-  const composite = Math.round(os * 0.30 + lv * 0.40 + br * 0.30);
-
-  // VERDICT
-  let verdict, vcls;
-  if (composite >= 7) { verdict = 'BUY'; vcls = 'tg'; }
-  else if (composite >= 5) { verdict = 'ACCUMULATE'; vcls = 'tb'; }
-  else if (composite >= 3) { verdict = 'WAIT FOR DIP'; vcls = 'ta'; }
-  else { verdict = 'AVOID'; vcls = 'tm'; }
-
-  return { os, lv, br, composite, verdict, vcls,
-    athDrop, vol, mcap, liq, c24, c7, c14, c30 };
+  aborted=true; scanning=false;
+  document.getElementById('scan-btn').disabled=false;
+  document.getElementById('stop-btn').style.display='none';
+  setStatus(`Stopped — ${results.length} tokens found so far.`,100);
 }
 
 // ── RENDER TABLE ──
+const COLS=[
+  ['Ticker','sym'],['Name','name'],['Price','price'],
+  ['24h','c24'],['7d vs BTC','c7'],['ATH drop','ath'],['ATH age','age'],
+  ['Volume','vol'],['Supply risk','sr'],['Data integrity','di'],
+  ['Liveness','lv'],['Score','composite'],
+  ['Probability','prob'],['Conf','conf'],
+  ['Venue','exch'],['Action','action']
+];
+
 function renderTable() {
-  // Column definitions: [label, sortKey]
-  const cols = [
-    ['Ticker','sym'],['Name','name'],['Price','price'],
-    ['24h','c24'],['7d','c7'],['ATH drop','ath'],
-    ['Volume','vol'],['Mcap','mcap'],
-    ['Oversold','os'],['Liveness','lv'],['Bounce','br'],['Score','composite'],
-    ['Best venue','exch'],['Action','verdict']
-  ];
+  const filterV=document.getElementById('f-verdict').value;
+  let rows=[...results];
+  if (filterV==='BUY') rows=rows.filter(r=>r.action==='BUY');
+  else if (filterV==='ACCUMULATE') rows=rows.filter(r=>r.prob>=50);
+  else if (filterV==='no-supply') rows=rows.filter(r=>r.sr.score<2);
+  else if (filterV==='wb') rows=rows.filter(r=>r.wb?.wb_tradable);
+  else if (filterV==='cb') rows=rows.filter(r=>r.wb?.on_coinbase);
+  else if (filterV==='bn') rows=rows.filter(r=>r.wb?.on_bn_global);
 
-  const sortBy = sortCol;
-  const filterV = document.getElementById('f-verdict').value;
-
-  let rows = [...results];
-
-  // Filter
-  if (filterV === 'BUY') rows = rows.filter(r => r.verdict === 'BUY');
-  else if (filterV === 'ACCUMULATE') rows = rows.filter(r => r.composite >= 5);
-  else if (filterV === 'wb') rows = rows.filter(r => r.wb?.wb_tradable);
-  else if (filterV === 'cb') rows = rows.filter(r => r.wb?.on_coinbase);
-  else if (filterV === 'bn') rows = rows.filter(r => r.wb?.on_bn_global);
-
-  // Sort using sortCol and sortDir
-  rows.sort((a,b) => {
-    let av, bv;
-    if (sortBy==='sym') { av=a.coin.symbol||''; bv=b.coin.symbol||''; return sortDir*av.localeCompare(bv); }
-    if (sortBy==='name') { av=a.coin.name||''; bv=b.coin.name||''; return sortDir*av.localeCompare(bv); }
-    if (sortBy==='price') { av=a.coin.current_price||0; bv=b.coin.current_price||0; }
-    else if (sortBy==='c24') { av=a.c24; bv=b.c24; }
-    else if (sortBy==='c7') { av=a.c7; bv=b.c7; }
-    else if (sortBy==='ath') { av=a.athDrop; bv=b.athDrop; }
-    else if (sortBy==='vol') { av=a.vol; bv=b.vol; }
-    else if (sortBy==='mcap') { av=a.mcap; bv=b.mcap; }
-    else if (sortBy==='os') { av=a.os; bv=b.os; }
-    else if (sortBy==='lv') { av=a.lv; bv=b.lv; }
-    else if (sortBy==='br') { av=a.br; bv=b.br; }
-    else if (sortBy==='composite') { av=a.composite; bv=b.composite; }
-    else if (sortBy==='exch') { av=bestExch(a).name; bv=bestExch(b).name; return sortDir*av.localeCompare(bv); }
-    else if (sortBy==='verdict') { av=a.composite; bv=b.composite; }
-    else { av=a.composite; bv=b.composite; }
-    return sortDir*(bv-av);
+  rows.sort((a,b)=>{
+    const d=sortDir;
+    if (sortCol==='sym') return d*((a.coin.symbol||'').localeCompare(b.coin.symbol||''));
+    if (sortCol==='name') return d*((a.coin.name||'').localeCompare(b.coin.name||''));
+    if (sortCol==='price') return d*(b.coin.current_price-a.coin.current_price);
+    if (sortCol==='c24') return d*(b.c24-a.c24);
+    if (sortCol==='c7') return d*(b.c7-a.c7);
+    if (sortCol==='ath') return d*(b.athDrop-a.athDrop);
+    if (sortCol==='age') {
+      const ga=a.ath_age,gb=b.ath_age;
+      if (!ga&&!gb) return 0; if (!ga) return d; if (!gb) return -d;
+      return d*(ga.cls==='tg'?1:ga.cls==='ta'?0:-1)-(gb.cls==='tg'?1:gb.cls==='ta'?0:-1);
+    }
+    if (sortCol==='vol') return d*(b.vol-a.vol);
+    if (sortCol==='sr') return d*(a.sr.score-b.sr.score);
+    if (sortCol==='di') return d*(b.di.score-a.di.score);
+    if (sortCol==='lv') return d*(b.lv-a.lv);
+    if (sortCol==='composite') return d*(b.composite-a.composite);
+    if (sortCol==='prob') return d*(b.prob-a.prob);
+    if (sortCol==='conf') return d*(['High','Medium','Low'].indexOf(a.conf)-['High','Medium','Low'].indexOf(b.conf));
+    if (sortCol==='exch') return d*(bestExch(a).name.localeCompare(bestExch(b).name));
+    if (sortCol==='action') return d*(['BUY','ACCUMULATE','WAIT','AVOID'].indexOf(a.action)-['BUY','ACCUMULATE','WAIT','AVOID'].indexOf(b.action));
+    return d*(b.composite-a.composite);
   });
 
   if (!rows.length) {
-    document.getElementById('results-wrap').innerHTML = '<div class="results-card"><div class="empty-state">No tokens match the current filters.</div></div>';
+    document.getElementById('results-wrap').innerHTML='<div class="results-card"><div class="empty-state">No tokens match filters.</div></div>';
     return;
   }
 
-  let html = `<div style="font-size:11px;color:var(--muted);margin-bottom:6px">${rows.length} tokens displayed · Click column headers to sort · Click any row for analysis</div>
-  <div class="results-card"><div class="tbl-wrap"><table>
-  <thead><tr>
-    ${cols.map(([lbl,key])=>`<th onclick="colSort('${key}')" style="cursor:pointer;user-select:none;white-space:nowrap">
-      ${lbl} <span style="color:${sortCol===key?'var(--green)':'var(--mu2)'};font-size:10px">${sortCol===key?(sortDir===-1?'↓':'↑'):'↕'}</span>
-    </th>`).join('')}
+  let html=`<div style="font-size:11px;color:var(--muted);margin-bottom:6px">${rows.length} tokens · Click headers to sort · Click rows for analysis</div>
+  <div class="results-card"><div class="tbl-wrap"><table><thead><tr>
+  ${COLS.map(([lbl,key])=>`<th onclick="colSort('${key}')">${lbl}<span style="color:${sortCol===key?'var(--green)':'var(--mu2)'};font-size:9px"> ${sortCol===key?(sortDir===-1?'↓':'↑'):'↕'}</span></th>`).join('')}
   </tr></thead><tbody>`;
 
   for (const r of rows) {
-    const c = r.coin;
-    const exch = bestExch(r);
-    html += `<tr onclick="openM('${c.symbol}')">
-      <td style="font-weight:600;color:var(--blue)">${c.symbol?.toUpperCase()}</td>
-      <td style="color:var(--text)">${trunc(c.name,18)}</td>
-      <td>${fmtP(c.current_price)}</td>
+    const c=r.coin;
+    const exch=bestExch(r);
+    const sym=c.symbol?.toUpperCase()||'';
+    const rs=r.rs;
+    const age=r.ath_age;
+    const probColor=r.prob>=65?'var(--green)':r.prob>=50?'var(--blue)':r.prob>=35?'var(--amber)':'var(--muted)';
+
+    html+=`<tr onclick="openM('${sym}')">
+      <td style="font-weight:600;color:var(--blue)">${sym}
+        <button class="copy-btn" title="Copy ticker" onclick="event.stopPropagation();copyText('${sym}',this)">⧉</button>
+      </td>
+      <td>${trunc(c.name,16)}</td>
+      <td>${fmtP(c.current_price)}
+        <button class="copy-btn" title="Copy price" onclick="event.stopPropagation();copyText('${c.current_price}',this)">⧉</button>
+      </td>
       <td class="${r.c24>=0?'pos':'neg'}">${r.c24>=0?'+':''}${r.c24.toFixed(1)}%</td>
-      <td class="${r.c7>=0?'pos':'neg'}">${r.c7>=0?'+':''}${r.c7.toFixed(1)}%</td>
+      <td>
+        <span class="${r.c7>=0?'pos':'neg'}">${r.c7>=0?'+':''}${r.c7.toFixed(1)}%</span>
+        ${rs?`<span class="tag ${rs.cls}" style="font-size:9px;margin-left:3px" title="${rs.note}">${rs.label}</span>`:''}
+      </td>
       <td class="neg">-${r.athDrop.toFixed(0)}%</td>
+      <td>${age?`<span class="tag ${age.cls}" style="font-size:9px" title="${age.note}">${age.label}</span>`:'<span class="mu">—</span>'}</td>
       <td>${fmtV(r.vol)}</td>
-      <td class="mu">${fmtV(r.mcap)}</td>
-      <td>${scoreBadge(r.os)}</td>
-      <td>${scoreBadge(r.lv)}</td>
-      <td>${scoreBadge(r.br)}</td>
+      <td><span class="tag ${r.sr.cls}" title="${r.sr.note}">${r.sr.label}</span></td>
+      <td>${scoreBadge(r.di.score,r.di.cls)}</td>
+      <td>${scoreBadge(r.lv,r.lv>=7?'var(--green)':r.lv>=5?'var(--blue)':r.lv>=3?'var(--amber)':'var(--muted)')}</td>
       <td style="font-weight:600;color:${r.composite>=7?'var(--green)':r.composite>=5?'var(--blue)':r.composite>=3?'var(--amber)':'var(--muted)'}">${r.composite}/10</td>
+      <td><span class="prob-big" style="color:${probColor}">${r.prob}%</span></td>
+      <td><span class="tag ${r.confCls}">${r.conf}</span></td>
       <td><span class="epill ${exch.best?'best':'ok'}">${exch.name}</span></td>
-      <td><span class="tag ${r.vcls}">${r.verdict}</span></td>
+      <td><span class="tag ${r.actionCls}">${r.action}</span></td>
     </tr>`;
   }
-  html += '</tbody></table></div></div>';
-  document.getElementById('results-wrap').innerHTML = html;
+  html+='</tbody></table></div></div>';
+  document.getElementById('results-wrap').innerHTML=html;
 }
 
 function colSort(key) {
-  if (sortCol === key) { sortDir *= -1; } // flip direction
-  else { sortCol = key; sortDir = -1; } // new col defaults to desc
+  sortCol===key ? sortDir*=-1 : (sortCol=key,sortDir=-1);
   renderTable();
 }
-
 function reSort() { if (results.length) renderTable(); }
 
-function renderMetrics(passed, fetched) {
-  const wn = results.filter(r=>r.verdict==='BUY').length;
-  const w  = results.filter(r=>r.composite>=5&&r.composite<7).length;
-  const wb = results.filter(r=>r.wb?.wb_tradable).length;
-  document.getElementById('metrics').style.display = 'grid';
-  document.getElementById('metrics').innerHTML = `
-    <div class="metric"><div class="metric-val" style="color:var(--green)">${wn}</div><div class="metric-lbl">Buy signals</div></div>
-    <div class="metric"><div class="metric-val" style="color:var(--blue)">${w}</div><div class="metric-lbl">Accumulate</div></div>
-    <div class="metric"><div class="metric-val">${passed}</div><div class="metric-lbl">Passed filters</div></div>
+function renderMetrics(passed,fetched) {
+  const buy=results.filter(r=>r.action==='BUY').length;
+  const acc=results.filter(r=>r.action==='ACCUMULATE').length;
+  const hiLv=results.filter(r=>r.lv>=6).length;
+  const supRisk=results.filter(r=>r.sr.score>=2).length;
+  document.getElementById('metrics').style.display='grid';
+  document.getElementById('metrics').innerHTML=`
+    <div class="metric"><div class="metric-val" style="color:var(--green)">${buy}</div><div class="metric-lbl">Buy signals</div></div>
+    <div class="metric"><div class="metric-val" style="color:var(--blue)">${acc}</div><div class="metric-lbl">Accumulate</div></div>
+    <div class="metric"><div class="metric-val">${hiLv}</div><div class="metric-lbl">High liveness</div></div>
+    <div class="metric"><div class="metric-val" style="color:var(--red)">${supRisk}</div><div class="metric-lbl">Supply risk</div></div>
+    <div class="metric"><div class="metric-val">${passed}</div><div class="metric-lbl">Qualified</div></div>
     <div class="metric"><div class="metric-val class="mu"">${fetched}</div><div class="metric-lbl">Scanned</div></div>
-    <div class="metric"><div class="metric-val" style="color:var(--amber)">${wb}</div><div class="metric-lbl">Webull tradable</div></div>
   `;
 }
 
 // ── MODAL ──
-function openM(symbol) {
-  const r = results.find(x => x.coin.symbol?.toUpperCase() === symbol.toUpperCase());
+function openM(sym) {
+  const r=results.find(x=>x.coin.symbol?.toUpperCase()===sym);
   if (!r) return;
-  const c = r.coin;
-  const wb = r.wb;
-  const exch = bestExch(r);
+  const c=r.coin, wb=r.wb, exch=bestExch(r);
+  const reg=getRegime();
+  const probColor=r.prob>=65?'var(--green)':r.prob>=50?'var(--blue)':r.prob>=35?'var(--amber)':'var(--muted)';
 
-  // Exchange pills
-  const pills = [];
-  if (wb?.on_bn_global) pills.push({n:'Binance (perp available)',cls:'best'});
+  const pills=[];
+  if (wb?.on_bn_global) pills.push({n:'Binance Global (perp available)',cls:'best'});
   if (wb?.on_coinbase) pills.push({n:'Coinbase',cls:'best'});
   if (wb?.wb_tradable) pills.push({n:'Webull',cls:'ok'});
   else if (wb?.wb_watch) pills.push({n:'Webull (watch only)',cls:''});
-  if (wb?.on_bn_global || r.vol > 5000000) pills.push({n:'Bybit (likely)',cls:'ok'});
-  if (!pills.length) pills.push({n:'DEX / smaller exchange',cls:''});
+  if (wb?.on_bn_global||(r.vol>5e6)) pills.push({n:'Bybit (likely)',cls:'ok'});
+  if (!pills.length) pills.push({n:'DEX / small exchange',cls:''});
 
-  document.getElementById('mcontent').innerHTML = `
-    <div class="modal-h">${c.symbol?.toUpperCase()} <span style="font-size:14px;color:var(--muted);font-weight:400">${c.name}</span></div>
-    <div class="modal-sub">${wb?.category||'Altcoin'} · ${wb?.tier||fmtTier(r.mcap)} · Rank #${c.market_cap_rank||'?'}</div>
+  // Warnings
+  let warnings='';
+  if (r.sr.score>=2) warnings+=`<div class="warn-box"><span class="warn-icon">⚠</span><span><strong>Supply dilution risk (${r.sr.label}):</strong> ${r.sr.note}. A large unlock hitting the market can overwhelm any bounce. Verify on TokenUnlocks.app before entering.</span></div>`;
+  if (r.di.score<5) warnings+=`<div class="warn-box"><span class="warn-icon">⚠</span><span><strong>Data integrity concern:</strong> ${r.di.issues.join('. ')}. Treat volume and price data with caution.</span></div>`;
+  if (r.ath_age?.cls==='tr2') warnings+=`<div class="warn-box"><span class="warn-icon">⚠</span><span><strong>Recent ATH:</strong> ATH was only ${r.ath_age.label} ago. Asset may still be in price discovery decline — high false-positive bounce risk.</span></div>`;
+  if (reg.short==='panic') warnings+=`<div class="warn-box"><span class="warn-icon">⚠</span><span><strong>Market panic regime:</strong> BTC is in sharp decline. Most alt bounces fail in this environment. Wait for BTC to stabilise first.</span></div>`;
+
+  document.getElementById('mcontent').innerHTML=`
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:16px">
+      <div>
+        <div class="modal-h">${sym} <span style="font-size:14px;color:var(--muted);font-weight:400">${c.name}</span></div>
+        <div class="modal-sub">${wb?.category||'Altcoin'} · ${wb?.tier||fmtTier(r.mcap)} · Rank #${c.market_cap_rank||'?'} · ${reg.label}</div>
+        ${warnings}
+      </div>
+      <div style="text-align:center;flex-shrink:0">
+        <div class="prob-ring" style="border-color:${probColor}">
+          <div class="prob-pct" style="color:${probColor}">${r.prob}%</div>
+          <div class="prob-lbl">bounce</div>
+        </div>
+        <div style="margin-top:6px"><span class="tag ${r.actionCls}">${r.action}</span></div>
+        <div style="margin-top:4px"><span class="tag ${r.confCls}" style="font-size:9px">${r.conf} confidence</span></div>
+      </div>
+    </div>
+
     <div class="mgrid">
-      <div class="mstat"><div class="mstat-v">${fmtP(c.current_price)}</div><div class="mstat-l">Current price</div></div>
-      <div class="mstat"><div class="mstat-v neg">-${r.athDrop.toFixed(1)}%</div><div class="mstat-l">From ATH ($${fmtP(c.ath)})</div></div>
+      <div class="mstat"><div class="mstat-v">${fmtP(c.current_price)} <button class="copy-btn" onclick="copyText('${c.current_price}',this)" title="Copy price">⧉</button></div><div class="mstat-l">Mark price (use this for entry)</div></div>
+      <div class="mstat"><div class="mstat-v neg">-${r.athDrop.toFixed(1)}%</div><div class="mstat-l">From ATH ($${fmtP(c.ath)}) · ${r.ath_age?.label||'?'} ago</div></div>
       <div class="mstat"><div class="mstat-v ${r.c24>=0?'pos':'neg'}">${r.c24>=0?'+':''}${r.c24.toFixed(2)}%</div><div class="mstat-l">24h change</div></div>
-      <div class="mstat"><div class="mstat-v ${r.c7>=0?'pos':'neg'}">${r.c7>=0?'+':''}${r.c7.toFixed(2)}%</div><div class="mstat-l">7d change</div></div>
+      <div class="mstat"><div class="mstat-v ${r.c7>=0?'pos':'neg'}">${r.c7>=0?'+':''}${r.c7.toFixed(2)}%</div><div class="mstat-l">7d change ${r.rs?'· '+r.rs.note:''}</div></div>
+    </div>
+
+    <div class="mgrid">
       <div class="mstat"><div class="mstat-v">${fmtV(r.vol)}</div><div class="mstat-l">24h volume</div></div>
-      <div class="mstat"><div class="mstat-v">${(r.liq*100).toFixed(2)}%</div><div class="mstat-l">Vol / MCap ratio</div></div>
+      <div class="mstat"><div class="mstat-v">${(r.liq*100).toFixed(2)}%</div><div class="mstat-l">Vol/MCap ratio</div></div>
+      <div class="mstat"><div class="mstat-v"><span class="tag ${r.sr.cls}">${r.sr.label}</span></div><div class="mstat-l">Supply dilution risk</div></div>
+      <div class="mstat"><div class="mstat-v"><span class="tag ${r.di.cls}">${r.di.label}</span></div><div class="mstat-l">Data integrity</div></div>
     </div>
 
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">
       ${[['Oversold',r.os],['Liveness',r.lv],['Bounce ready',r.br],['Composite',r.composite]].map(([l,v])=>`
-        <div class="mstat">
-          <div class="mstat-v" style="color:${v>=7?'var(--green)':v>=5?'var(--blue)':v>=3?'var(--amber)':'var(--muted)'}">${v}/10</div>
-          <div class="mstat-l">${l}</div>
-        </div>`).join('')}
+        <div class="mstat"><div class="mstat-v" style="color:${v>=7?'var(--green)':v>=5?'var(--blue)':v>=3?'var(--amber)':'var(--muted)'}">${v}/10</div><div class="mstat-l">${l}</div></div>`).join('')}
     </div>
 
-    <div class="sec-title">Where to trade</div>
+    <div class="sec">Where to trade</div>
     <div style="margin-bottom:14px">${pills.map(p=>`<span class="epill ${p.cls}">${p.n}</span>`).join('')}</div>
 
-    <div class="sec-title">Analysis</div>
-    <div class="analysis-box">${generateAnalysis(r)}</div>
+    <div class="sec">Analysis</div>
+    <div class="abox">${generateAnalysis(r)}</div>
 
-    <div class="sec-title">Recent news</div>
+    <div class="sec">Failure modes — what can kill this setup</div>
+    <div class="abox">${generateFailureModes(r)}</div>
+
+    <div class="sec">Execution plan</div>
+    <div class="abox">${generateExecution(r)}</div>
+
+    <div class="data-gap-box">
+      <strong style="color:var(--text)">Data blind spots (require paid APIs):</strong> Token unlock schedule · Developer GitHub activity · On-chain active wallet count · Order book depth · Funding rate · Open interest. Check these manually on TokenUnlocks.app, Coinglass, and the project GitHub before entering.
+    </div>
+
+    <div class="sec">Recent news</div>
     <div id="news-section"><span class="spinner-sm"></span> Loading news...</div>
   `;
-
   document.getElementById('moverlay').classList.add('show');
-  fetchNews(c.symbol, c.id);
+  document.getElementById('modal').scrollTop=0;
+  fetchNews(c.symbol,c.id);
 }
 
-// ── FREE RULE-BASED ANALYSIS ──
+// ── ANALYSIS TEXT ──
 function generateAnalysis(r) {
-  const c = r.coin;
-  const sym = c.symbol?.toUpperCase();
-  const vol = r.vol;
-  const mcap = r.mcap;
-  const liq = r.liq;
-  const athDrop = r.athDrop;
-  const c24 = r.c24;
-  const c7 = r.c7;
-  const c14 = r.c14 || 0;
-  const c30 = r.c30 || 0;
+  const c=r.coin, sym=c.symbol?.toUpperCase();
+  const {vol,mcap,liq,athDrop,c24,c7,c14,c30,lv,br,prob,sr,di,rs} = r;
 
-  // 1. IS IT ALIVE?
-  let alive = '';
-  if (vol > 10000000 && mcap > 100000000) {
-    alive = `${sym} shows strong liveness signals — $${fmtV(vol)} in 24h volume against a $${fmtV(mcap)} market cap (${(liq*100).toFixed(1)}% ratio) confirms active market participation. This is not a dead coin.`;
-  } else if (vol > 1000000) {
-    alive = `${sym} has adequate liveness — $${fmtV(vol)} daily volume with a ${(liq*100).toFixed(1)}% vol/mcap ratio. Volume has not dried up which confirms the project is still being traded. Monitor for volume trends declining further.`;
-  } else {
-    alive = `${sym} shows borderline liveness — only $${fmtV(vol)} in 24h volume. While not dead, the thin volume means this can be moved easily in either direction and recovery rallies can be manufactured and faded quickly.`;
-  }
+  // Alive?
+  let alive='';
+  if (lv>=7&&vol>5e6) alive=`${sym} shows strong liveness — $${fmtV(vol)} daily volume (${(liq*100).toFixed(1)}% vol/mcap) with major exchange presence confirms active market participation. Not a dead coin.`;
+  else if (lv>=5) alive=`${sym} shows adequate liveness — $${fmtV(vol)} volume with ${(liq*100).toFixed(1)}% vol/mcap. Market has not abandoned it but watch for declining volume trend.`;
+  else alive=`${sym} shows borderline liveness — $${fmtV(vol)} volume is thin. Vulnerable to single-actor moves. Proceed with caution.`;
+  if (di.issues.length) alive+=` Note: ${di.issues[0].toLowerCase()}.`;
 
-  // 2. WHY IS IT DOWN?
-  let why = '';
-  const isAccel = c7 < c30/4*1.5; // decline accelerating
-  const isDecel = c7 > c30/4; // decline slowing
-  if (Math.abs(c30) > 40 && Math.abs(c7) < Math.abs(c30)/4) {
-    why = `The decline appears to be decelerating — ${sym} fell ${c30.toFixed(1)}% over 30 days but only ${c7.toFixed(1)}% in the last 7 days. This deceleration pattern is one of the more reliable early signs that selling pressure is exhausting.`;
-  } else if (Math.abs(c7) > 25) {
-    why = `${sym} is in an accelerating decline — down ${c7.toFixed(1)}% in 7 days. This is likely a combination of broader market pressure, forced selling from leveraged positions, and possibly sector rotation away from its narrative. No confirmed catalyst visible from price data alone.`;
-  } else {
-    why = `${sym} shows a gradual decline pattern — ${c30.toFixed(1)}% over 30 days, ${c7.toFixed(1)}% over 7 days. This slow bleed is typical of distribution phases where larger holders exit over time without creating obvious sell pressure.`;
-  }
+  // Why down?
+  let why='';
+  const isDecel=(Math.abs(c7)<Math.abs(c30)/4*1.3);
+  if (isDecel&&Math.abs(c30)>20) why=`Decline is visibly decelerating — ${c30.toFixed(1)}% over 30 days but only ${c7.toFixed(1)}% in the last 7 days. Selling pressure appears to be exhausting.`;
+  else if (Math.abs(c7)>20) why=`Accelerating decline — down ${c7.toFixed(1)}% in 7 days. Likely a combination of broader market pressure and forced selling from leveraged positions.`;
+  else why=`Gradual bleed pattern — ${c30.toFixed(1)}% over 30 days, ${c7.toFixed(1)}% over 7 days. Typical of distribution phase where larger holders exit over time.`;
+  if (rs) why+=` Relative to BTC: ${rs.note}.`;
 
-  // 3. BOUNCE PROBABILITY
-  let bounceP = '';
-  const bScore = r.br;
-  if (bScore >= 7) {
-    bounceP = `Bounce probability: HIGH (${bScore}/10). Multiple accumulation signals present — the decline is visibly decelerating, volume is expanding relative to market cap (${(liq*100).toFixed(1)}%), and the price is in the historical bounce sweet spot at ${athDrop.toFixed(0)}% below ATH. This setup historically precedes recoveries of 20-50% from the entry zone.`;
-  } else if (bScore >= 5) {
-    bounceP = `Bounce probability: MODERATE (${bScore}/10). Some positive signals — ${isDecel?'decline is slowing':'volume is present'} — but not all conditions are aligned. A bounce is plausible but requires a confirming catalyst or a broader market recovery to sustain.`;
-  } else {
-    bounceP = `Bounce probability: LOW (${bScore}/10). The decline has not shown deceleration signals yet and volume behaviour does not suggest accumulation. This may continue lower before finding a floor. Consider waiting for clearer reversal signals before entering.`;
-  }
+  // Bounce prob
+  let bounceP=`Bounce probability: ${prob}% (${r.conf} confidence). `;
+  if (prob>=65) bounceP+=`Multiple positive signals aligned — deceleration present, volume healthy, ATH distance in sweet spot.`;
+  else if (prob>=50) bounceP+=`Moderate setup — some signals positive but not all conditions aligned. Staged entry appropriate.`;
+  else bounceP+=`Below-average setup. Risk/reward does not yet favour entry. Key detractors: ${sr.score>=2?'supply dilution risk, ':''}${di.score<5?'data integrity concerns, ':''}${getRegime().short==='panic'?'market panic regime.':'insufficient accumulation signals.'}`;
 
-  // 4. WHEN MIGHT IT BOUNCE?
-  let when = '';
-  if (bScore >= 7) {
-    when = `Technical conditions suggest the bounce window is near. Watch for: (1) 24h candle closing green on above-average volume, (2) RSI turning up from below 30 on the daily chart, (3) a positive catalyst in the project's sector. Entry in tranches on any of these confirmations is reasonable.`;
-  } else if (bScore >= 5) {
-    when = `No immediate bounce trigger visible yet. Monitor for volume expansion — if daily volume climbs above ${fmtV(vol*1.5)} consistently for 2-3 days, that signals accumulation beginning. A broader market recovery (BTC rally) would accelerate this.`;
-  } else {
-    when = `Premature to call a bounce. Wait for the 7d decline to flatten — when ${sym}'s weekly change moves from negative toward 0%, that signals the selling is done. Only then does an entry make sense. Patience is the trade here.`;
-  }
-
-  // 5. TRADE RECOMMENDATION
-  let trade = '';
-  const entryZone = c.current_price;
-  const target = entryZone * (1 + (athDrop > 80 ? 0.40 : 0.25));
-  const stop = entryZone * 0.88;
-  const exch = bestExch(r);
-
-  if (r.composite >= 7) {
-    trade = `<strong>Buy now (spot)</strong> at current levels ($${fmtP(entryZone)}) with a target of $${fmtP(target)} (+${athDrop>80?40:25}% from entry). Hard stop at $${fmtP(stop)} (-12%). If available on ${exch.name} perp, a small leveraged long (3-5x max) with the same stop adds upside. Do not chase — if price moves more than 8% above current before you enter, wait for a pullback.`;
-  } else if (r.composite >= 5) {
-    trade = `<strong>Accumulate in small tranches</strong> — not fully ready but conditions are improving. Start with 25-30% of intended position at current price ($${fmtP(entryZone)}). Set a price alert at $${fmtP(entryZone*0.95)} (5% lower) to add more if it dips. Target $${fmtP(target)}. Spot only — no leverage until bounce is confirmed.`;
-  } else {
-    trade = `<strong>Do not buy yet — stand aside.</strong> Risk/reward does not support entry. This may find a lower base before recovering. If already holding, set a hard stop at $${fmtP(stop)}. Revisit when weekly decline decelerates and volume starts expanding.`;
-  }
+  // When
+  let when='';
+  if (br>=7) when=`Bounce conditions are near. Watch for: (1) daily candle closing green on above-average volume, (2) RSI turning up from below 30, (3) positive sector catalyst. Consider staged entry now.`;
+  else if (br>=5) when=`Not yet ready. Monitor for volume expansion above $${fmtV(vol*1.5)} sustained over 2-3 days and weekly decline flattening toward 0%.`;
+  else when=`Premature entry. Wait until 7-day change improves from ${c7.toFixed(1)}% toward 0% — that signals active selling is done.`;
 
   return `<h4>1. Is it alive?</h4><p>${alive}</p>
 <h4>2. Why is it down?</h4><p>${why}</p>
 <h4>3. Bounce probability</h4><p>${bounceP}</p>
-<h4>4. When might it bounce?</h4><p>${when}</p>
-<h4>5. Trade recommendation</h4><p>${trade}</p>`;
+<h4>4. When might it bounce?</h4><p>${when}</p>`;
 }
 
-// ── FREE NEWS via CryptoPanic ──
-async function fetchNews(symbol, cgId) {
-  const newsEl = document.getElementById('news-section');
-  if (!newsEl) return;
+function generateFailureModes(r) {
+  const sym=r.coin.symbol?.toUpperCase();
+  const modes=[];
+
+  if (r.sr.score>=2) modes.push(`<strong>Structural dilution:</strong> ${r.sr.note}. A major unlock can overwhelm buyer demand and reset the price to new lows. Check TokenUnlocks.app immediately.`);
+  if (r.di.score<5) modes.push(`<strong>Wash trading risk:</strong> ${r.di.issues.join('. ')}. If volume is manufactured, the apparent liquidity does not exist and exits will be difficult.`);
+  if (r.ath_age?.cls==='tr2') modes.push(`<strong>Recent crash:</strong> ATH was only ${r.ath_age.label} ago. Coin may still be in primary price discovery decline — what looks like a bounce setup may be a dead cat.`);
+  if (r.lv<5) modes.push(`<strong>Liveness risk:</strong> Volume and exchange presence are below threshold. A single large holder exiting can extend the decline significantly.`);
+  if (getRegime().short==='panic') modes.push(`<strong>Macro regime:</strong> BTC is in panic decline. In this environment 80%+ of altcoin bounce setups fail as forced selling cascades across the market.`);
+  if (getRegime().short==='correct') modes.push(`<strong>Correction regime:</strong> BTC is correcting. Alt bounces typically lag BTC recovery by 1-2 weeks — early entry risks a second leg down.`);
+  if (r.rs&&r.rs.label.includes('↓↓')) modes.push(`<strong>Severe relative weakness:</strong> ${sym} is underperforming BTC by ${r.rs.note}. Relative weakness often persists — a coin losing ground to BTC in a decline usually continues to underperform.`);
+  if (!modes.length) modes.push(`<strong>No major structural failure modes detected from available data.</strong> Primary risk is timing — being early in a decline that has further to run. Manage this with staged entries and a hard stop.`);
+
+  // Always add the data blind spots
+  modes.push(`<strong>Unknown unknowns (data not available here):</strong> Scheduled token unlocks, developer activity, on-chain wallet behaviour, exchange listing risk, regulatory action. These can invalidate any technical setup instantly.`);
+
+  return `<h4 class="fail">What can kill this trade</h4><ul style="padding-left:16px;display:flex;flex-direction:column;gap:8px">${modes.map(m=>`<li>${m}</li>`).join('')}</ul>`;
+}
+
+function generateExecution(r) {
+  const c=r.coin, sym=c.symbol?.toUpperCase();
+  const entry=c.current_price||1;
+  const exch=bestExch(r);
+  const athDrop=r.athDrop;
+  const targetPct=athDrop>80?0.40:0.25;
+  const target=entry*(1+targetPct);
+  const stop=entry*0.88;
+  const stopPct=12;
+
+  let plan='';
+  if (r.prob>=65&&r.action==='BUY') {
+    plan=`<h4 class="exec">Entry</h4><p>Enter at current mark price <strong>$${fmtP(entry)}</strong>. Use mark price — not last traded perp price — as your reference. Spread entry across 2-3 tranches: 40% now, 30% at $${fmtP(entry*0.95)}, 30% at $${fmtP(entry*0.90)}.</p>
+<h4 class="exec">Target</h4><p><strong>$${fmtP(target)}</strong> (+${(targetPct*100).toFixed(0)}% from entry). First partial exit at 50% of position when +${(targetPct*50).toFixed(0)}% reached.</p>
+<h4 class="exec">Stop / invalidation</h4><p>Hard stop at <strong>$${fmtP(stop)}</strong> (-${stopPct}%). If price breaks this level on daily close, thesis is invalidated — exit in full regardless of unrealised loss.</p>
+<h4 class="exec">Venue</h4><p>${exch.name}${exch.best?' (best liquidity)':' — verify depth before entry'}. ${exch.name.includes('Binance')||exch.name.includes('Bybit')?'Perp long available at 3-5x max leverage for leveraged version.':'Spot only — no perp recommended at this venue.'}</p>
+<h4 class="exec">Max position size</h4><p>Keep total position notional below 2% of ${sym}'s average hourly volume ($${fmtV(r.vol/24*0.02)}) to avoid moving the market with your own entry.</p>`;
+  } else if (r.action==='ACCUMULATE') {
+    plan=`<h4 class="exec">Entry</h4><p>Start with 25-30% of intended position at <strong>$${fmtP(entry)}</strong>. Set alert at $${fmtP(entry*0.93)} to add more on any further weakness.</p>
+<h4 class="exec">Full entry trigger</h4><p>Scale to full position only when daily volume expands above $${fmtV(r.vol*1.4)} and 7-day change turns positive. That confirms accumulation is genuine.</p>
+<h4 class="exec">Stop</h4><p>Tight stop at <strong>$${fmtP(stop)}</strong> (-${stopPct}%) on initial tranche. Widen stop only after adding confirmed position.</p>
+<h4 class="exec">Target</h4><p>$${fmtP(target)} (+${(targetPct*100).toFixed(0)}%).</p>`;
+  } else {
+    plan=`<h4 class="exec">No entry recommended</h4><p>Bounce probability of ${r.prob}% does not support a trade. Set a price alert at <strong>$${fmtP(entry*0.90)}</strong> (10% below current) to revisit if conditions improve. Only enter when probability improves to 50%+ on a rescan.</p>`;
+  }
+  return plan;
+}
+
+// ── FREE NEWS ──
+async function fetchNews(symbol,cgId) {
+  const el=document.getElementById('news-section');
+  if (!el) return;
   try {
-    // CryptoPanic free tier — no auth needed for basic
-    const r = await fetch(`https://cryptopanic.com/api/free/v1/posts/?auth_token=free&currencies=${symbol.toUpperCase()}&kind=news&public=true`);
-    if (!r.ok) throw new Error('news unavailable');
-    const d = await r.json();
-    const items = (d.results||[]).slice(0,5);
-    if (!items.length) {
-      newsEl.innerHTML = `<div style="font-size:11px;color:var(--muted)">No recent news found for ${symbol.toUpperCase()}. <a href="https://www.coingecko.com/en/coins/${cgId}" target="_blank" style="color:var(--blue)">View on CoinGecko →</a></div>`;
-      return;
-    }
-    newsEl.innerHTML = items.map(item => {
-      const date = new Date(item.published_at).toLocaleDateString();
-      const sentiment = item.votes?.positive > item.votes?.negative ? 
-        '<span class="tag tg" style="font-size:9px">+</span>' :
-        item.votes?.negative > item.votes?.positive ?
-        '<span class="tag tr2" style="font-size:9px">-</span>' :
-        '<span class="tag tm" style="font-size:9px">~</span>';
-      return `<div class="news-item">${sentiment} <a href="${item.url}" target="_blank">${item.title}</a> <span style="color:var(--muted);font-size:10px">· ${date}</span></div>`;
-    }).join('') + `<div style="margin-top:8px;font-size:10px"><a href="https://cryptopanic.com/news/${symbol.toLowerCase()}/" target="_blank" style="color:var(--blue)">More news on CryptoPanic →</a></div>`;
+    const r=await fetch(`https://cryptopanic.com/api/free/v1/posts/?auth_token=free&currencies=${symbol.toUpperCase()}&kind=news&public=true`);
+    if (!r.ok) throw new Error('unavailable');
+    const d=await r.json();
+    const items=(d.results||[]).slice(0,5);
+    if (!items.length) { el.innerHTML=`<div style="font-size:11px;color:var(--muted)">No recent news found. <a href="https://cryptopanic.com/news/${symbol.toLowerCase()}/" target="_blank" style="color:var(--blue)">CryptoPanic →</a></div>`; return; }
+    el.innerHTML=items.map(item=>{
+      const date=new Date(item.published_at).toLocaleDateString();
+      const pos=item.votes?.positive||0, neg=item.votes?.negative||0;
+      const sent=pos>neg?'<span class="tag tg" style="font-size:9px">+</span>':neg>pos?'<span class="tag tr2" style="font-size:9px">−</span>':'<span class="tag tm" style="font-size:9px">~</span>';
+      return `<div class="news-item">${sent} <a href="${item.url}" target="_blank">${item.title}</a> <span style="color:var(--muted);font-size:10px">· ${date}</span></div>`;
+    }).join('')+`<div style="margin-top:6px;font-size:10px"><a href="https://cryptopanic.com/news/${symbol.toLowerCase()}/" target="_blank" style="color:var(--blue)">More on CryptoPanic →</a> · <a href="https://www.coingecko.com/en/coins/${cgId}" target="_blank" style="color:var(--blue)">CoinGecko →</a></div>`;
   } catch(e) {
-    newsEl.innerHTML = `<div style="font-size:11px;color:var(--muted)">News unavailable. <a href="https://www.coingecko.com/en/coins/${cgId}" target="_blank" style="color:var(--blue)">View on CoinGecko →</a> · <a href="https://cryptopanic.com/news/${symbol.toLowerCase()}/" target="_blank" style="color:var(--blue)">CryptoPanic →</a></div>`;
+    el.innerHTML=`<div style="font-size:11px;color:var(--muted)"><a href="https://cryptopanic.com/news/${symbol.toLowerCase()}/" target="_blank" style="color:var(--blue)">CryptoPanic →</a> · <a href="https://www.coingecko.com/en/coins/${cgId}" target="_blank" style="color:var(--blue)">CoinGecko →</a></div>`;
   }
 }
 
-function closeM() { document.getElementById('moverlay').classList.remove('show'); }
-function closeMO(e) { if (e.target===document.getElementById('moverlay')) closeM(); }
+function closeM(){document.getElementById('moverlay').classList.remove('show')}
+function closeMO(e){if(e.target===document.getElementById('moverlay'))closeM()}
 
 // ── HELPERS ──
 function bestExch(r) {
-  const wb = r.wb;
-  if (wb?.on_bn_global) return {name:'Binance', best:true};
-  if (wb?.on_coinbase) return {name:'Coinbase', best:true};
-  if (wb?.wb_tradable) return {name:'Webull', best:true};
-  if (r.vol > 5000000) return {name:'Binance likely', best:false};
-  return {name:'Check exchange', best:false};
+  const wb=r.wb;
+  if (wb?.on_bn_global) return {name:'Binance',best:true};
+  if (wb?.on_coinbase) return {name:'Coinbase',best:true};
+  if (wb?.wb_tradable) return {name:'Webull',best:true};
+  if (r.vol>5e6) return {name:'Binance likely',best:false};
+  return {name:'Check exchange',best:false};
 }
 
-function scoreBadge(v) {
-  const c = v>=7?'var(--green)':v>=5?'var(--blue)':v>=3?'var(--amber)':'var(--muted)';
-  const w = v*10;
-  return `<span style="color:${c};font-weight:500">${v}</span><span class="sbar"><span class="sbar-fill" style="width:${w}%;background:${c}"></span></span>`;
+function scoreBadge(v,colorOrCls) {
+  const isColor=typeof colorOrCls==='string'&&colorOrCls.startsWith('var');
+  const c=isColor?colorOrCls:(colorOrCls==='tg'?'var(--green)':colorOrCls==='ta'?'var(--amber)':colorOrCls==='tr2'?'var(--red)':'var(--blue)');
+  return `<span style="color:${c};font-weight:500">${v}</span><span class="sbar"><span class="sbar-fill" style="width:${v*10}%;background:${c}"></span></span>`;
+}
+
+function copyText(text,btn) {
+  navigator.clipboard.writeText(String(text)).then(()=>{
+    if (btn){btn.classList.add('copied');btn.textContent='✓';setTimeout(()=>{btn.classList.remove('copied');btn.textContent='⧉'},1200);}
+  });
 }
 
 function fmtTier(mcap) {
-  if (mcap>10e9) return 'Mega Cap';
-  if (mcap>1e9) return 'Large Cap';
-  if (mcap>100e6) return 'Mid Cap';
-  if (mcap>10e6) return 'Small Cap';
+  if (mcap>10e9) return 'Mega Cap'; if (mcap>1e9) return 'Large Cap';
+  if (mcap>100e6) return 'Mid Cap'; if (mcap>10e6) return 'Small Cap';
   return 'Micro Cap';
 }
-
-function fmtP(p) {
+function fmtP(p){
   if (!p) return '—';
   if (p>=1000) return '$'+p.toLocaleString(undefined,{maximumFractionDigits:0});
   if (p>=1) return '$'+p.toFixed(3);
   if (p>=0.01) return '$'+p.toFixed(5);
   return '$'+p.toFixed(7);
 }
-function fmtV(v) {
+function fmtV(v){
   if (!v) return '—';
   if (v>=1e9) return '$'+(v/1e9).toFixed(1)+'B';
   if (v>=1e6) return '$'+(v/1e6).toFixed(1)+'M';
   if (v>=1e3) return '$'+(v/1e3).toFixed(0)+'K';
   return '$'+Math.round(v);
 }
-function trunc(s,n) { return s&&s.length>n?s.slice(0,n-1)+'…':s||''; }
-function sleep(ms) { return new Promise(r=>setTimeout(r,ms)); }
-function setStatus(msg, pct) {
-  document.getElementById('status').textContent = msg;
-  if (pct!==undefined) document.getElementById('pbar').style.width = pct+'%';
+function trunc(s,n){return s&&s.length>n?s.slice(0,n-1)+'…':s||''}
+// ── QUICK SEARCH ──
+async function quickSearch() {
+  const raw = document.getElementById('search-input').value.trim().toUpperCase();
+  if (!raw) return;
+  const btn = document.getElementById('search-btn');
+  const statusEl = document.getElementById('search-status');
+  btn.disabled = true; btn.textContent = '…';
+  statusEl.style.color = 'var(--muted)';
+  statusEl.textContent = `Looking up ${raw}…`;
+  try {
+    if (!btcData) await fetchBTCRegime();
+    const searchRes = await fetch(`https://api.coingecko.com/api/v3/search?query=${encodeURIComponent(raw)}`);
+    const searchData = await searchRes.json();
+    const coins = searchData.coins || [];
+    const match = coins.find(c => c.symbol.toUpperCase() === raw) || coins[0];
+    if (!match) { statusEl.textContent = `"${raw}" not found on CoinGecko.`; btn.disabled=false; btn.textContent='Search'; return; }
+    statusEl.textContent = `Found ${match.name} — fetching live data…`;
+    const mktRes = await fetch(`https://api.coingecko.com/api/v3/coins/${match.id}?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false`);
+    if (!mktRes.ok) throw new Error('Market data unavailable');
+    const d = await mktRes.json();
+    const md = d.market_data;
+    const coin = {
+      id: match.id,
+      symbol: d.symbol?.toUpperCase(),
+      name: d.name,
+      current_price: md.current_price?.usd,
+      market_cap: md.market_cap?.usd,
+      market_cap_rank: d.market_cap_rank,
+      total_volume: md.total_volume?.usd,
+      price_change_percentage_24h: md.price_change_percentage_24h,
+      price_change_percentage_7d_in_currency: md.price_change_percentage_7d,
+      price_change_percentage_14d_in_currency: md.price_change_percentage_14d,
+      price_change_percentage_30d_in_currency: md.price_change_percentage_30d,
+      ath: md.ath?.usd,
+      ath_change_percentage: md.ath_change_percentage?.usd,
+      ath_date: md.ath_date?.usd,
+      circulating_supply: md.circulating_supply,
+      total_supply: md.total_supply,
+      max_supply: md.max_supply,
+    };
+    const wb = WB_MAP[coin.symbol?.toUpperCase()] || null;
+    const scored = scoreToken(coin, wb);
+    const result = { coin, wb, ...scored };
+    const existing = results.findIndex(r => r.coin.symbol?.toUpperCase() === coin.symbol?.toUpperCase());
+    if (existing >= 0) results[existing] = result; else results.unshift(result);
+    statusEl.textContent = `${coin.name} — ${scored.prob}% bounce prob · ${scored.action}`;
+    statusEl.style.color = scored.action==='BUY'?'var(--green)':scored.action==='ACCUMULATE'?'var(--blue)':'var(--muted)';
+    openM(coin.symbol?.toUpperCase());
+  } catch(e) {
+    statusEl.textContent = `Error: ${e.message}`;
+    statusEl.style.color = 'var(--red)';
+  }
+  btn.disabled = false; btn.textContent = 'Search';
+}
+
+
+function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
+function setStatus(msg,pct){
+  document.getElementById('status').textContent=msg;
+  if (pct!==undefined) document.getElementById('pbar').style.width=pct+'%';
 }
 </script>
 </body>
